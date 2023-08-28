@@ -24,7 +24,7 @@
 
         // 아이템 추가
         AddItem(new Item("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 5));
-        AddItem(new Item("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", 2, 0));
+        AddItem(new Item("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", 20, 0));
 
         monsters = new Monster[10];
         //몬스터 정보 세팅
@@ -53,7 +53,7 @@
         item.IsEquiped = false;
     }
 
-    static int GetItemAtkAmount()
+    public static int GetItemAtkAmount()
     {
         int itemAtk = 0;
         for (int i = 0; i < inventory.Length; i++)
@@ -89,11 +89,6 @@
 
     #endregion
 
-    static void AddMonster(Monster monster)
-    {
-        monsters[MonsterCount] = monster;
-        ++MonsterCount;
-    }
 
     #region 게임 화면 출력
 
@@ -272,9 +267,53 @@
 
     #endregion
 
-    static void DisplayBattle()
+    
+
+    #region Utility
+
+    public static int CheckValidInput(int min, int max)
     {
-        //전투 화면
+        while (true)
+        {
+            string input = Console.ReadLine();
+
+            bool parseSuccess = int.TryParse(input, out var ret);
+            if (parseSuccess)
+            {
+                if (ret >= min && ret <= max)
+                    return ret;
+            }
+
+            DisplayError("잘못된 입력입니다.");
+        }
+    }
+
+    public static void DisplayTitle(string title)
+    {
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine(title);
+        Console.ResetColor();
+    }
+
+    public static void DisplayError(string error)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine(error);
+        Console.ResetColor();
+    }
+
+    #endregion
+    
+    //몬스터 배열에 몬스터 추가
+    static void AddMonster(Monster monster)
+    {
+        monsters[MonsterCount] = monster;
+        ++MonsterCount;
+    }
+
+    //전투 화면 출력
+    public static void DisplayBattle()
+    {
         Console.Clear();
         DisplayTitle("Battle!");
         Console.WriteLine();
@@ -289,7 +328,7 @@
             battleMonsters.Add(monsters[randomIndex]);
         }
 
-        // 선택된 몬스터 표시
+        // 선택되어 전투에 참여하는 몬스터 표시
         for (int i = 0; i < battleMonsters.Count; i++)
         {
             Monster curMonster = battleMonsters[i];
@@ -297,7 +336,8 @@
         }
 
         Console.WriteLine();
-        Console.WriteLine("1. 공격");
+        Console.WriteLine("0. 나가기");
+        Console.WriteLine("1. 전투시작");
 
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
@@ -316,76 +356,33 @@
         }
     }
 
+    //전투시작 화면
     static void DisplayBattleStart(List<Monster> battleMonsters)
     {
         Console.Clear();
         DisplayTitle("Battle!");
         Console.WriteLine();
 
+        //BattleManager 객체 생성 및 플레이어와 전투에 참여하는 몬스터 리스트 전달
+        BattleManager battle1 = new BattleManager(player, battleMonsters);
+
         for (int i = 0; i < battleMonsters.Count; i++)
         {
-            if (battleMonsters[i] == null)
-                break;
-
             Monster curMonster = battleMonsters[i];
-
             Console.Write($"{i + 1}. ");
             Console.WriteLine($"Lv.{curMonster.Level} {curMonster.Name} HP {curMonster.Hp}");
         }
 
         Console.WriteLine();
-        Console.WriteLine("1. 공격");
+        Console.WriteLine("적 번호를 입력하여 대상을 공격하세요.");
+        Console.WriteLine("0. 취소");
 
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
         Console.Write(">> ");
 
-        int input = CheckValidInput(0, 1);
-        switch (input)
-        {
-            case 0:
-                DisplayGameIntro();
-                break;
+        battle1.StartBattle();
 
-            case 1:
-                DisplayManageEquipment();
-                break;
-        }
     }
-
-        #region Utility
-
-        static int CheckValidInput(int min, int max)
-    {
-        while (true)
-        {
-            string input = Console.ReadLine();
-
-            bool parseSuccess = int.TryParse(input, out var ret);
-            if (parseSuccess)
-            {
-                if (ret >= min && ret <= max)
-                    return ret;
-            }
-
-            DisplayError("잘못된 입력입니다.");
-        }
-    }
-
-    static void DisplayTitle(string title)
-    {
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine(title);
-        Console.ResetColor();
-    }
-
-    static void DisplayError(string error)
-    {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine(error);
-        Console.ResetColor();
-    }
-
-    #endregion
 }
 
