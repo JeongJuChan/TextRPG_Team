@@ -32,8 +32,10 @@ namespace TextRPG_Team
             inventory = new Item[10];
 
             // 아이템 추가
-            AddItem(new Item("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", ItemType.Equipment, 0, 5));
-            AddItem(new Item("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", ItemType.Equipment, 2, 0));
+            AddItem(new Equipment("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 5));
+            AddItem(new Equipment("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", 2, 0));
+            AddItem(new Consumable("HP 포션", "체력을 회복해주는 물약입니다.", player.HealHP, 30, 3));
+            AddItem(new Consumable("MP 포션", "마나를 회복해주는 물약입니다.", player.HealMP, 30, 3));
         }
 
         #endregion
@@ -46,19 +48,37 @@ namespace TextRPG_Team
             ++ItemCount;
         }
 
-        static void EquipItem(Item item)
+        static void EquipItem(Equipment item)
         {
             item.IsEquiped = true;
         }
 
-        static void UnequipItem(Item item)
+        static void UnequipItem(Equipment item)
         {
             item.IsEquiped = false;
         }
 
         static void UseItem(Consumable item)
         {
+            item.Count--;
             
+            if (item.Count == 0)
+            {
+                item.Consume();
+                int index = Array.IndexOf(inventory, item);
+                inventory[index] = null;
+
+                InvenSort(index);
+                ItemCount--;
+            }
+        }
+
+        private static void InvenSort(int sortIndex)
+        {
+            for (int i = sortIndex; i < ItemCount - 1; i++)
+            {
+                inventory[i] = inventory[i + 1];
+            }
         }
 
         static int GetItemAtkAmount()
@@ -68,11 +88,14 @@ namespace TextRPG_Team
             {
                 if (inventory[i] == null)
                     break;
-
+                
                 Item curItem = inventory[i];
-
-                if (curItem.IsEquiped)
-                    itemAtk += curItem.Atk;
+                if (curItem.Type == ItemType.Equipment)
+                {
+                    Equipment equipment = (Equipment)curItem;
+                    if (equipment.IsEquiped)
+                        itemAtk += equipment.Atk;
+                }
             }
 
             return itemAtk;
@@ -87,9 +110,14 @@ namespace TextRPG_Team
                     break;
 
                 Item curItem = inventory[i];
-
-                if (curItem.IsEquiped)
-                    itemDef += curItem.Def;
+                if (curItem.Type == ItemType.Equipment)
+                {
+                    Equipment equipment = (Equipment)curItem;
+                    if (equipment.IsEquiped)
+                    {
+                        itemDef += equipment.Def;
+                    }
+                }
             }
 
             return itemDef;
@@ -179,19 +207,25 @@ namespace TextRPG_Team
                 if (inventory[i] == null)
                     break;
 
+                
                 Item curItem = inventory[i];
-
-                if (curItem.IsEquiped)
+                if (curItem.Type == ItemType.Equipment)
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.Write("[E] ");
-                    Console.ForegroundColor = ConsoleColor.White;
+                    Equipment equipment = (Equipment)curItem;
+                    if (equipment.IsEquiped)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("[E] ");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    Console.Write($"{curItem.Name} | ");
+                    if (equipment.Atk != 0) Console.Write($" 공격력 +{equipment.Atk} ");
+                    if (equipment.Def != 0) Console.Write($" 방어력 +{equipment.Def} ");
+                    Console.Write($" | {curItem.Description}");
+                    Console.WriteLine();
                 }
-                Console.Write($"{curItem.Name} | ");
-                if (curItem.Atk != 0) Console.Write($" 공격력 +{curItem.Atk} ");
-                if (curItem.Def != 0) Console.Write($" 방어력 +{curItem.Def} ");
-                Console.Write($" | {curItem.Description}");
-                Console.WriteLine();
+
+                
             }
             Console.ResetColor();
 
@@ -232,17 +266,22 @@ namespace TextRPG_Team
                 Item curItem = inventory[i];
 
                 Console.Write($"{i + 1} ");
-                if (curItem.IsEquiped)
+                if (curItem.Type == ItemType.Equipment)
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.Write("[E] ");
-                    Console.ForegroundColor = ConsoleColor.White;
+                    Equipment equipment = (Equipment) curItem;
+
+                    if (equipment.IsEquiped)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("[E] ");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    Console.Write($"{curItem.Name} | ");
+                    if (equipment.Atk != 0) Console.Write($" 공격력 +{equipment.Atk} ");
+                    if (equipment.Def != 0) Console.Write($" 방어력 +{equipment.Def} ");
+                    Console.Write($" | {curItem.Description}");
+                    Console.WriteLine();
                 }
-                Console.Write($"{curItem.Name} | ");
-                if (curItem.Atk != 0) Console.Write($" 공격력 +{curItem.Atk} ");
-                if (curItem.Def != 0) Console.Write($" 방어력 +{curItem.Def} ");
-                Console.Write($" | {curItem.Description}");
-                Console.WriteLine();
             }
             Console.ResetColor();
 
@@ -256,12 +295,16 @@ namespace TextRPG_Team
             }
             else if (input > 0 && input <= ItemCount)
             {
-
                 Item curItem = inventory[input - 1];
-                if (curItem.IsEquiped)
-                    UnequipItem(curItem);
-                else
-                    EquipItem(curItem);
+
+                if (curItem.Type == ItemType.Equipment)
+                {
+                    Equipment equipment = (Equipment)curItem;
+                    if (equipment.IsEquiped)
+                        UnequipItem(equipment);
+                    else
+                        EquipItem(equipment);
+                }
 
                 DisplayManageEquipment();
             }

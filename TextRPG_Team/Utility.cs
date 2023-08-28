@@ -37,6 +37,10 @@ namespace TextRPG_Team
         }
         #endregion
 
+        #region Consumables
+
+        #endregion
+
         #endregion
 
     }
