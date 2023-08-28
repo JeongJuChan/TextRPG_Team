@@ -32,8 +32,8 @@ namespace TextRPG_Team
             inventory = new Item[10];
 
             // 아이템 추가
-            AddItem(new Item("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 5));
-            AddItem(new Item("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", 2, 0));
+            AddItem(new Item("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", ItemType.Equipment, 0, 5));
+            AddItem(new Item("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", ItemType.Equipment, 2, 0));
         }
 
         #endregion
@@ -54,6 +54,11 @@ namespace TextRPG_Team
         static void UnequipItem(Item item)
         {
             item.IsEquiped = false;
+        }
+
+        static void UseItem(Consumable item)
+        {
+            
         }
 
         static int GetItemAtkAmount()
