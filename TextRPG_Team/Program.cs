@@ -1,13 +1,16 @@
 ﻿internal class Program
 {
     private static Character player;
+    private static Character[] jobs;
     private static Item[] inventory;
     private static int ItemCount;
 
     static void Main(string[] args)
     {
         GameDataSetting();
-        DisplayGameIntro();
+        //게임 데이터 있을 경우 DisplayGameIntro 실행 / 없을 경우 DisplayCharacterCustom 실행
+        //DisplayGameIntro();
+        DisplayCharacterCustom();
     }
 
     #region 초기화
@@ -19,6 +22,13 @@
 
         // 인벤토리 생성
         inventory = new Item[10];
+        
+        //직업 정보 세팅
+        jobs = new Character[4];
+        jobs[0] = new Character(player.Name, "전사", 1, 5, 10, 100, 1500);
+        jobs[1] = new Character(player.Name, "궁수", 1, 6, 9, 80, 1500);
+        jobs[2] = new Character(player.Name, "마법사", 1, 9, 6, 80, 1500);
+        jobs[3] = new Character(player.Name, "도적", 1, 10, 5, 80, 1500);
 
         // 아이템 추가
         AddItem(new Item("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 5));
@@ -82,6 +92,30 @@
     #endregion
 
     #region 게임 화면 출력
+    static void DisplayCharacterCustom()
+    {
+        Console.Clear();
+
+        Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.");
+        Console.WriteLine("원하시는 이름을 설정해주세요.");
+        Console.Write(">>");
+        string chrName = Console.ReadLine();
+        player.Name = chrName;
+        Console.WriteLine("직업을 선택해주세요.");
+        Console.WriteLine("1. 전사  2. 궁수  3. 마법사  4. 도적");
+        Console.Write(">>");
+        int input = CheckValidInput(1, 4);
+        switch (input)
+        {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                player = jobs[input - 1];
+                DisplayGameIntro();
+                break;
+        }
+    }
 
     static void DisplayGameIntro()
     {
@@ -294,7 +328,7 @@
 
 public class Character
 {
-    public string Name { get; }
+    public string Name { get; set; }
     public string Job { get; }
     public int Level { get; }
     public int Atk { get; }
