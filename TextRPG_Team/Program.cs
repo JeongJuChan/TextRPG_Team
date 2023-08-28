@@ -4,7 +4,6 @@ namespace TextRPG_Team
     {
         private static Character player;
         private static Character[] jobs;
-        private static CharacterSkills characterSkills = new CharacterSkills();
 
         private static Item[] inventory;
         private static int ItemCount;
@@ -19,6 +18,9 @@ namespace TextRPG_Team
 
         static void GameDataSetting()
         {
+            CharacterSkills characterSkills = new CharacterSkills();
+
+
             // 캐릭터 정보 세팅
             player = new Character("초기값", "초기값", 1, 10, 5, 100, 50, 1500);
 
@@ -66,7 +68,6 @@ namespace TextRPG_Team
             //{
             //    player = Save_player;
             //}
-
 
             // 인벤토리 생성
             inventory = new Item[10];
@@ -130,8 +131,6 @@ namespace TextRPG_Team
             return itemDef;
         }
 
-        
-
         #region 게임 화면 출력
 
         static void DisplayCharacterCustom()
@@ -162,7 +161,6 @@ namespace TextRPG_Team
             /*switch (input)
             {
                 case 1:
-                    
                     break;
                 case 2:
                     break;
