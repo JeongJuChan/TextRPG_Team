@@ -3,6 +3,8 @@
     private static Character player;
     private static Item[] inventory;
     private static int ItemCount;
+    private static Monster[] monsters;
+    private static int MonsterCount;
 
     static void Main(string[] args)
     {
@@ -23,6 +25,12 @@
         // 아이템 추가
         AddItem(new Item("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 5));
         AddItem(new Item("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", 2, 0));
+
+        monsters = new Monster[10];
+        //몬스터 정보 세팅
+        AddMonster(new Monster("미니언", 2, 5, 15));
+        AddMonster(new Monster("공허충", 3, 9, 10));
+        AddMonster(new Monster("대포 미니언", 5, 8, 25));
     }
 
     #endregion
@@ -81,6 +89,12 @@
 
     #endregion
 
+    static void AddMonster(Monster monster)
+    {
+        monsters[MonsterCount] = monster;
+        ++MonsterCount;
+    }
+
     #region 게임 화면 출력
 
     static void DisplayGameIntro()
@@ -92,10 +106,11 @@
         Console.WriteLine();
         Console.WriteLine("1. 상태보기");
         Console.WriteLine("2. 인벤토리");
+        Console.WriteLine("3. 전투시작");
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
 
-        int input = CheckValidInput(1, 2);
+        int input = CheckValidInput(1, 3);
         switch (input)
         {
             case 1:
@@ -104,6 +119,10 @@
 
             case 2:
                 DisplayInventory();
+                break;
+
+            case 3:
+                DisplayBattle();
                 break;
         }
     }
@@ -253,9 +272,90 @@
 
     #endregion
 
-    #region Utility
+    static void DisplayBattle()
+    {
+        //전투 화면
+        Console.Clear();
+        DisplayTitle("Battle!");
+        Console.WriteLine();
 
-    static int CheckValidInput(int min, int max)
+        // monsters 배열에서 몬스터를 랜덤하게 선택하여 battleMonsters 리스트에 추가
+        int numMonsters = new Random().Next(1, 5);
+        List<Monster> battleMonsters = new List<Monster>();
+
+        for (int i = 0; i < numMonsters; i++)
+        {
+            int randomIndex = new Random().Next(0, MonsterCount);
+            battleMonsters.Add(monsters[randomIndex]);
+        }
+
+        // 선택된 몬스터 표시
+        for (int i = 0; i < battleMonsters.Count; i++)
+        {
+            Monster curMonster = battleMonsters[i];
+            Console.WriteLine($"Lv.{curMonster.Level} {curMonster.Name} HP {curMonster.Hp}");
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("1. 공격");
+
+        Console.WriteLine();
+        Console.WriteLine("원하시는 행동을 입력해주세요.");
+        Console.Write(">> ");
+
+        int input = CheckValidInput(0, 1);
+        switch (input)
+        {
+            case 0:
+                DisplayGameIntro();
+                break;
+
+            case 1:
+                DisplayBattleStart(battleMonsters);
+                break;
+        }
+    }
+
+    static void DisplayBattleStart(List<Monster> battleMonsters)
+    {
+        Console.Clear();
+        DisplayTitle("Battle!");
+        Console.WriteLine();
+
+        for (int i = 0; i < battleMonsters.Count; i++)
+        {
+            if (battleMonsters[i] == null)
+                break;
+
+            Monster curMonster = battleMonsters[i];
+
+            Console.Write($"{i + 1}. ");
+            Console.WriteLine($"Lv.{curMonster.Level} {curMonster.Name} HP {curMonster.Hp}");
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("1. 공격");
+
+        Console.WriteLine();
+        Console.WriteLine("원하시는 행동을 입력해주세요.");
+        Console.Write(">> ");
+
+        int input = CheckValidInput(0, 1);
+        switch (input)
+        {
+            case 0:
+                DisplayGameIntro();
+                break;
+
+            case 1:
+                DisplayManageEquipment();
+                break;
+        }
+    }
+
+        #region Utility
+
+        static int CheckValidInput(int min, int max)
     {
         while (true)
         {
