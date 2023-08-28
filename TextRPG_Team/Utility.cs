@@ -8,7 +8,7 @@ namespace TextRPG_Team
 {
     public class Utility
     {
-        static Random rand = new Random();
+        public static Random rand = new Random();
 
         #region Skills
 

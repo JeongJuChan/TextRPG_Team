@@ -1,4 +1,6 @@
-﻿namespace TextRPG_Team
+﻿using System.Xml.Schema;
+
+namespace TextRPG_Team
 {
     internal class Program
     {
@@ -296,6 +298,61 @@
         }
 
         #endregion
+
+        #region 배틀구현 이후 추가할 메서드들 - 주찬
+
+        int criticalPercentage = 15;
+        int dodgePercentage = 10;
+        float criticalMod = 1.6f;
+
+        void DummyBattleLogic()
+        {
+            // 크리티컬 데미지
+            float damage = 0;
+            damage = IsCritical() ? GetCriticalDamage(damage) : damage;
+
+            // 피하기 로직
+            string attackSentence = "~을";
+            attackSentence += IsDodged() ? GetDodgeSentence() : "";
+        }
+
+        bool IsCritical()
+        {
+            int randomPercentage = Utility.rand.Next(0, 100);
+            if (randomPercentage < criticalPercentage)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        float GetCriticalDamage(float damage)
+        {
+            return damage * criticalMod;
+        }
+
+        bool IsDodged()
+        {
+            int randomPercentage = Utility.rand.Next(0, 100);
+            if (randomPercentage < dodgePercentage)
+            {
+                return true;
+            }
+            else 
+            { 
+                return false; 
+            }
+        }
+
+        public string GetDodgeSentence()
+        {
+            return "공격했지만 아무일도 일어나지 않았습니다.";
+        }
+        #endregion
     }
+
 
 }

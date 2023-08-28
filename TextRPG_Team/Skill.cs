@@ -11,6 +11,11 @@ namespace TextRPG_Team
         // 정보 MP 추가
         // 캐릭터에서 가져오기
         // 2. 스킬 항목 추가
+        
+        // TODO :
+        // 직업에 맞는 스킬 추가
+        // - 메서드 늘리기
+        // Program에 있는 배틀 로직 배틀 쪽에 붙이기
 
         // GameData Settings 쪽에 Switch 문으로 캐릭터 선택과 생성이 완료 되면 Skill을 자동으로 추가
 
