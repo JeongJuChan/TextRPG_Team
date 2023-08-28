@@ -24,14 +24,13 @@ namespace TextRPG_Team
         {
             string filePath = $@"{basePath}\{name}.json";
 
-            string json = File.ReadAllText(filePath);
-
             if (!File.Exists(filePath))
             {
                 return null;
             }
             else
             {
+                string json = File.ReadAllText(filePath);
                 T t = JsonSerializer.Deserialize<T>(json);
                 if (t == null)
                 {

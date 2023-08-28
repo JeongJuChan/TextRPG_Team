@@ -1,10 +1,10 @@
-﻿using System.Xml.Schema;
-
 namespace TextRPG_Team
 {
     internal class Program
     {
         private static Character player;
+        private static Character[] jobs;
+
         private static Item[] inventory;
         private static int ItemCount;
 
@@ -18,15 +18,56 @@ namespace TextRPG_Team
 
         static void GameDataSetting()
         {
+            CharacterSkills characterSkills = new CharacterSkills();
+
+
             // 캐릭터 정보 세팅
-            player = new Character("Chad", "전사", 1, 10, 5, 100, 50, 1500);
+            player = new Character("초기값", "초기값", 1, 10, 5, 100, 50, 1500);
+
+            // 직업 정보 세팅
+            jobs = new Character[4];
+            jobs[0] = new Character("전사", "전사", 1, 5, 10, 100, 50, 1500);
+            jobs[1] = new Character("궁수", "궁수", 1, 6, 9, 80, 70, 1500);
+            jobs[2] = new Character("마법사", "마법사", 1, 9, 6, 80, 100, 1500);
+            jobs[3] = new Character("도적", "도적", 1, 10, 5, 80, 70, 1500);
+
+            #region 캐릭터 저장
+/*          List<Character> charList = new List<Character>(jobs);
+            charList[0].Skills.Add(new SigleSkill("알파 스트라이크", $"공격력 * 2 로 하나의 적을 공격합니다.", 10, player.Atk, 2, characterSkills.AttackSigleTarget));
+            charList[0].Skills.Add(new MultipleSkill("더블 스트라이크", "공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.", 15, player.Atk, 1.5f, characterSkills.AttackMutipleTarget));
+
+            charList[1].Skills.Add(new SigleSkill("라이징 샷", "공격력 * 2.25 로 하나의 적을 공격합니다.", 15, player.Atk, 2.25f, characterSkills.AttackSigleTarget));
+            charList[1].Skills.Add(new MultipleSkill("한 발에 두 놈", "공격력 * 1.75 로 2명의 적을 랜덤으로 공격합니다.", 20, player.Atk, 1.75f, characterSkills.AttackMutipleTarget));
+
+            charList[2].Skills.Add(new SigleSkill("파이어 볼", "공격력 * 2 로 하나의 적을 공격합니다.", 20, player.Atk, 2.5f, characterSkills.AttackSigleTarget));
+            charList[2].Skills.Add(new MultipleSkill("메테오", "공격력 * 1.75로 모든 적을 공격합니다.", 25, player.Atk, 2f, characterSkills.AttackMutipleTarget));
+
+            charList[3].Skills.Add(new SigleSkill("급소 베기", "공격력 * 2로 하나의 적을 공격합니다.", 15, player.Atk, 2f, characterSkills.AttackSigleTarget));
+            charList[3].Skills.Add(new MultipleSkill("암기 던지기", "공격력 * 2로 두 명의 적을 공격합니다.", 20, player.Atk, 2f, characterSkills.AttackMutipleTarget));
 
 
-            player.Skills.Add(new Skill("알파 스트라이크", 10, "공격력 * 2 로 하나의 적을 공격합니다.", Utility.AlphaStrike));
-            player.Skills.Add(new Skill("더블 스트라이크", 15, "공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.", Utility.DoubleStrike));
+            JsonUtility.Save(charList, "characterlist");*/
 
-            //JsonUtility.Save(player, "player");
-            player = JsonUtility.Load<Character>("player");
+            
+            #endregion
+
+            //데이터 불러오기
+            Character Save_player = JsonUtility.Load<Character>("player");
+
+
+            //게임 데이터 있을 경우 DisplayGameIntro 실행 / 없을 경우 DisplayCharacterCustom 실행
+            DisplayCharacterCustom();
+
+            // 주찬 : 테스트 하려고 잠깐 주석 해놨어요 
+            //if (Save_player == null)
+            //{
+            //    //DisplayCharacterCustom();
+            //    JsonUtility.Save(player, "player");
+            //}
+            //else
+            //{
+            //    player = Save_player;
+            //}
 
             // 인벤토리 생성
             inventory = new Item[10];
@@ -123,10 +164,46 @@ namespace TextRPG_Team
             return itemDef;
         }
 
-        #endregion
-
         #region 게임 화면 출력
 
+        static void DisplayCharacterCustom()
+        {
+            Console.Clear();
+
+            Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.");
+            Console.WriteLine("원하시는 이름을 설정해주세요.");
+            Console.Write(">>");
+            string chrName = Console.ReadLine();
+            Console.WriteLine("");
+            Console.WriteLine("직업을 선택해주세요.");
+            Console.WriteLine("1. 전사  2. 궁수  3. 마법사  4. 도적");
+            Console.Write(">>");
+            int input = CheckValidInput(1, 4);
+
+            // 레벨 공 방 hp mp 골드
+            /*jobs[0] = new Character("전사", "전사", 1, 5, 10, 100, 50, 1500);
+            jobs[1] = new Character("궁수", "궁수", 1, 6, 9, 80, 70, 1500);
+            jobs[2] = new Character("마법사", "마법사", 1, 9, 6, 80, 100, 1500);
+            jobs[3] = new Character("도적", "도적", 1, 10, 5, 80, 70, 1500);*/
+            player = jobs[input - 1];
+            player.Name = chrName;
+
+            var characterList = JsonUtility.Load<List<Character>>("characterList");
+
+            player = characterList[input - 1];
+            /*switch (input)
+            {
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+            }*/
+
+        }
         static void DisplayGameIntro()
         {
             Console.Clear();
@@ -400,7 +477,7 @@ namespace TextRPG_Team
             return "공격했지만 아무일도 일어나지 않았습니다.";
         }
         #endregion
+
+        #endregion
     }
-
-
 }
