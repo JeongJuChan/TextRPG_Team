@@ -3,9 +3,9 @@
 
     public class Character
     {
-        public List<Skill> Skills { get; private set; } = new List<Skill>();
+        public List<Skill> Skills { get; set; }
 
-        public string Name { get; }
+        public string Name { get; set; }
         public string Job { get; }
         public int Level { get; }
         public int Atk { get; }
