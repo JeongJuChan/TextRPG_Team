@@ -13,6 +13,7 @@ namespace TextRPG_Team
         private static int ItemCount;
         private static int equipmentCount;
 
+
         static void Main(string[] args)
         {
             GameDataSetting();
@@ -84,15 +85,23 @@ namespace TextRPG_Team
 
             monsters = new Monster[]
             {
-                new Monster("Lv.2 미니언", 2, 15, 5),
-                new Monster("Lv.5 대포미니언", 5, 25, 8),
-                new Monster("Lv.3 공허충", 3, 10, 9)
+                new Monster("Lv.1 미니언", 1, 10, 3, 10, inventory[0]),
+                new Monster("Lv.2 미니언", 2, 15, 5, 20, inventory[1]),
+                new Monster("Lv.5 대포미니언", 5, 25, 8, 50, inventory[2]),
+                new Monster("Lv.3 공허충", 3, 10, 9, 30, inventory[3])
             };
-
         
         }
 
         #region 아이템 관리
+
+        public static void DropItem(List<Item> items)
+        {
+            foreach(var item in items)
+            {
+                AddItem(item);
+            }
+        }
 
         static void AddItem(Item item)
         {
@@ -228,7 +237,7 @@ namespace TextRPG_Team
             Console.WriteLine();
             Console.WriteLine("원하시는 행동을 입력해주세요.");
 
-            BattleManager battle = new BattleManager(player, monsters);
+            BattleManager battle = new BattleManager(player, monsters, inventory);
 
             int input = CheckValidInput(1, 3);
             switch (input)
@@ -254,6 +263,8 @@ namespace TextRPG_Team
             Console.WriteLine();
             Console.WriteLine($"Lv.{player.Level}");
             Console.WriteLine($"{player.Name}({player.Job})");
+            Console.WriteLine($"EXP: {player.CurrentExp}");
+            Console.WriteLine();
 
             int itemAtk = GetItemAtkAmount();
             Console.Write($"공격력 :{player.Atk + itemAtk}");
