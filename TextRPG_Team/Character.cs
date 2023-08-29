@@ -16,6 +16,7 @@
 
         public Character(string name, string job, int level, int atk, int def, int hp, int mp, int gold)
         {
+            Skills = new List<Skill>();
             Name = name;
             Job = job;
             Level = level;
