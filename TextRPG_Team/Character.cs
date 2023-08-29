@@ -1,18 +1,20 @@
 ﻿namespace TextRPG_Team
 {
-
     public class Character
     {
-        public List<Skill> Skills { get; private set; } = new List<Skill>();
+        public List<Skill> Skills { get; set; }
 
-        public string Name { get; }
+        public string Name { get; set; }
         public string Job { get; }
         public int Level { get; }
         public int Atk { get; }
         public int Def { get; }
-        public int Hp { get; }
-        public int Mp { get; }
+        public int MaxHp { get; }
+        public int CurrentHp { get; set; }
+        public int CurrentMp { get; private set; }
+        public int MaxMp { get; }
         public int Gold { get; }
+        public bool IsDead => CurrentHp <= 0;
 
         public int Exp { get; }
 
@@ -23,11 +25,23 @@
             Level = level;
             Atk = atk;
             Def = def;
-            Hp = hp;
-            Mp = mp;
+            MaxHp = hp;
+            CurrentHp = hp;
+            CurrentMp = mp;
+            MaxMp = mp;
+            CurrentMp = mp;
             Gold = gold;
             Exp = 0;
         }
-    }
 
+        public void HealHP(int amount)
+        {
+            CurrentHp = Math.Clamp(CurrentHp + amount, 0, MaxHp);
+        }
+
+        public void HealMP(int amount)
+        {
+            CurrentMp = Math.Clamp(CurrentMp + amount, 0, MaxMp);
+        }
+    }
 }
