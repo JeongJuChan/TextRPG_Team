@@ -16,23 +16,21 @@
         public int Gold { get; }
         public bool IsDead => CurrentHp <= 0;
 
-        public int Exp { get; }
-
-        public Character(string name, string job, int level, int atk, int def, int hp, int mp, int gold)
+        public Character(string name, string job, int level, int atk, int def, int currenthp, int currentmp, int gold)
         {
+            Skills = new List<Skill>();
             Name = name;
             Job = job;
             Level = level;
             Atk = atk;
             Def = def;
-            MaxHp = hp;
-            CurrentHp = hp;
-            CurrentMp = mp;
-            MaxMp = mp;
-            CurrentMp = mp;
+            MaxHp = currenthp;
+            CurrentHp = currenthp;
+            CurrentMp = currentmp;
+            MaxMp = currentmp;
             Gold = gold;
-            Exp = 0;
         }
+
 
         public void HealHP(int amount)
         {
