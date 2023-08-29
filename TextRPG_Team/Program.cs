@@ -273,12 +273,12 @@ namespace TextRPG_Team
             Console.Write("ExpTable:");
             foreach(var i in expTable)
             {
-                Console.WriteLine($"{i.id}, {i.NeedEXP}, {i.StackEXP})");
+                Console.WriteLine($"{i.id}, {i.NeedEXP}, {i.StackEXP}");
             }
 
             foreach (var i in dropTable)
             {
-                Console.WriteLine($"{i.id}, {i.Name}, {i.Rate})");
+                Console.WriteLine($"{i.id}, {i.Item}, {i.Rate}");
             }
 
             //DisplayTitle("Battle!! - Result");

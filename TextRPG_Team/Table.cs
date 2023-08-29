@@ -16,7 +16,7 @@ namespace TextRPG_Team.Table
     public class DropTable
     {
         public int id { get; set; }
-        public string Name { get; set; } = string.Empty;
+        public string Item { get; set; } = string.Empty;
         public float Rate { get; set; }
     }
 

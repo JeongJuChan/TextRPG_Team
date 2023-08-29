@@ -2,41 +2,41 @@
     {
         "id": 1,
         "Item": "무쇠갑옷",
-        "Rate": 0.2,
+        "Rate": 0.2
     },
     {
         "id": 1,
         "Item": "HP 포션",
-        "Rate": 0.5,
+        "Rate": 0.5
     },
     {
         "id": 2,
         "Item": "낡은 검",
-        "Rate": 0.2,
+        "Rate": 0.2
     },
     {
         "id": 3,
         "Item": "MP 포션",
-        "Rate": 0.5,
+        "Rate": 0.5
     },
     {
         "id": 4,
         "Item": "무쇠갑옷",
-        "Rate": 0.3,
+        "Rate": 0.3
     },
     {
         "id": 4,
         "Item": "낡은 검",
-        "Rate": 0.3,
+        "Rate": 0.3
     },
     {
         "id": 4,
         "Item": "HP 포션",
-        "Rate": 0.4,
+        "Rate": 0.4
     },
     {
         "id": 4,
         "Item": "MP 포션",
-        "Rate": 0.4,
+        "Rate": 0.4
     }
 ]
