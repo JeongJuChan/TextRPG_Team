@@ -5,7 +5,6 @@ namespace TextRPG_Team
         private static Character player;
         private static Character[] jobs;
 
-        private static BattleManager battleManager;
         private static Monster[] monsters;
 
         private static Item[] inventory;
@@ -35,6 +34,14 @@ namespace TextRPG_Team
             CharacterSkills characterSkills = new CharacterSkills();
 
             List<Character> charList = new List<Character>(jobs);
+            for (int i = 0; i < charList.Count; i++)
+            {
+                if (charList[i].Skills == null)
+                {
+                    charList[i].Skills = new List<Skill>();
+                }
+            }
+
             charList[0].Skills.Add(new SigleSkill("알파 스트라이크", $"공격력 * 2 로 하나의 적을 공격합니다.", 10, player.Atk, 2, characterSkills.AttackSigleTarget));
             charList[0].Skills.Add(new MultipleSkill("더블 스트라이크", "공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.", 15, player.Atk, 1.5f, characterSkills.AttackMutipleTarget));
 
@@ -56,7 +63,6 @@ namespace TextRPG_Team
             //게임 데이터 있을 경우 DisplayGameIntro 실행 / 없을 경우 DisplayCharacterCustom 실행
             //DisplayCharacterCustom();
 
-            // 주찬: 테스트 하려고 잠깐 주석 해놨어요
             if (Save_player == null)
             {
                 DisplayCharacterCustom();
@@ -96,6 +102,7 @@ namespace TextRPG_Team
             {
                 ++equipmentCount;
             }
+            InvenSort();
         }
 
         static void EquipItem(Equipment item)
@@ -162,7 +169,7 @@ namespace TextRPG_Team
             inventory[j] = item;
         }
 
-        static int GetItemAtkAmount()
+        public static int GetItemAtkAmount()
         {
             int itemAtk = 0;
             for (int i = 0; i < inventory.Length; i++)
@@ -303,18 +310,6 @@ namespace TextRPG_Team
             var characterList = JsonUtility.Load<List<Character>>("characterList");
 
             player = characterList[input - 1];
-            /*switch (input)
-            {
-                case 1:
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    break;
-                case 4:
-                    break;
-            }*/
-
         }
 
         static void DisplayInventory()
@@ -523,7 +518,7 @@ namespace TextRPG_Team
 
         #region Utility
 
-        static int CheckValidInput(int min, int max)
+        public static int CheckValidInput(int min, int max)
         {
             while (true)
             {
@@ -548,7 +543,7 @@ namespace TextRPG_Team
             Console.ResetColor();
         }
 
-        static void DisplayError(string error)
+        public static void DisplayError(string error)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(error);
