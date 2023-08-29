@@ -12,11 +12,13 @@ public class BattleManager
     {
         this.player = player;
         this.monsters = monsters;
+
         ShuffleMonsters(); // 몬스터 배열 섞기
     }
 
+
     //전투 시작과 진행
-    public void StartBattle(Character player)
+    public void StartBattle(Character player, Dungeon dungeon)
     {
         
         while (true)
@@ -38,7 +40,10 @@ public class BattleManager
             MonsterTurn();
 
             if (CheckBattleEnd())
-                Program.DisplayGameIntro();
+                if (CheckAllMonstersDead())
+                    dungeon.ClearDungeon(); // 던전 클리어 처리
+                else
+                    Program.DisplayGameIntro();
         }
 
     }
@@ -217,6 +222,16 @@ public class BattleManager
         }
 
         return false;
+    }
+
+    bool CheckAllMonstersDead()
+    {
+        foreach (var monster in monsters)
+        {
+            if (!monster.IsDead)
+                return false;
+        }
+        return true;
     }
 
     //텍스트 색상 지정

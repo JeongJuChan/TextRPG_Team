@@ -1,11 +1,16 @@
 ﻿internal class Program
 {
-    private static Character player;
+    public static Character player;
+
     private static Item[] inventory;
     private static int ItemCount;
+
     private static BattleManager battleManager;
+
     private static Monster[] monsters;
 
+    private static Dungeon dungeon;
+    
     static void Main(string[] args)
     {
         GameDataSetting();
@@ -17,7 +22,7 @@
     static void GameDataSetting()
     {
         // 캐릭터 정보 세팅
-        player = new Character("Chad", "전사", 1, 10, 5, 100, 1500);
+        player = new Character("Chad", "전사", 1, 10, 5, 10000, 1500);
 
         // 인벤토리 생성
         inventory = new Item[10];
@@ -95,6 +100,8 @@
 
     public static void DisplayGameIntro()
     {
+        BattleManager battle = new BattleManager(player, monsters);
+
         Console.Clear();
 
         Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.");
@@ -102,11 +109,12 @@
         Console.WriteLine();
         Console.WriteLine("1. 상태보기");
         Console.WriteLine("2. 인벤토리");
-        Console.WriteLine("3. 전투");
+        // 현재 던전 층 수 표시
+        Console.WriteLine($"3. 던전입장");
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
 
-        BattleManager battle = new BattleManager(player, monsters);
+        
 
         int input = CheckValidInput(1, 3);
         switch (input)
@@ -118,8 +126,9 @@
             case 2:
                 DisplayInventory();
                 break;
+            
             case 3:
-                battle.StartBattle(player);
+                DungeonStart(dungeon); // 던전 입장 확인 메소드 호출
                 break;
         }
     }
@@ -264,6 +273,30 @@
                 EquipItem(curItem);
 
             DisplayManageEquipment();
+        }
+    }
+
+    //던전 입장 확인창
+    static void DungeonStart(Dungeon dungeon)
+    {
+        Console.Clear();
+        Dungeon dungeons = new Dungeon(1, monsters);
+        Console.WriteLine($"던전에 입장하시겠습니까?");
+        Console.WriteLine();
+        Console.WriteLine("1. 네");
+        Console.WriteLine("2. 아니오");
+
+
+        int input = Program.CheckValidInput(1, 2);
+        switch (input)
+        {
+            case 1:
+                dungeons.EnterDungeon();
+                break;
+
+            case 2:
+                DisplayGameIntro();
+                break;
         }
     }
 
