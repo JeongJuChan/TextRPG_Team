@@ -14,6 +14,8 @@
         public int Mp { get; }
         public int Gold { get; }
 
+        public int Exp { get; }
+
         public Character(string name, string job, int level, int atk, int def, int hp, int mp, int gold)
         {
             Name = name;
@@ -24,6 +26,7 @@
             Hp = hp;
             Mp = mp;
             Gold = gold;
+            Exp = 0;
         }
     }
 

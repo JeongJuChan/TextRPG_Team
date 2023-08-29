@@ -8,6 +8,7 @@ namespace TextRPG_Team
         private static Item[] inventory;
         private static int ItemCount;
 
+
         static void Main(string[] args)
         {
             GameDataSetting();
@@ -260,6 +261,57 @@ namespace TextRPG_Team
 
                 DisplayManageEquipment();
             }
+        }
+
+        static void DisplayBattleResult(Character prevPlayer, bool resultFlag = true, int killCount = 0)
+        {
+            Console.Clear();
+
+            List<Table.ExpTable>? expTable = JsonUtility.Load<List<Table.ExpTable>>("ExpTable");
+            List<Table.DropTable>? dropTable = JsonUtility.Load<List<Table.DropTable>>("DropTable");
+
+            Console.Write("ExpTable:");
+            foreach(var i in expTable)
+            {
+                Console.WriteLine($"{i.id}, {i.NeedEXP}, {i.StackEXP})");
+            }
+
+            foreach (var i in dropTable)
+            {
+                Console.WriteLine($"{i.id}, {i.Name}, {i.Rate})");
+            }
+
+            //DisplayTitle("Battle!! - Result");
+            //Console.WriteLine();
+
+            //string resultHeader = resultFlag == true ? "Victory" : "Lose";
+            //Console.WriteLine(resultHeader);
+            //Console.WriteLine();
+
+            //Console.WriteLine($"던전에서 몬스터 {killCount}마리를 잡았습니다.");
+            //Console.WriteLine();
+
+
+            //Console.WriteLine("[캐릭터 정보]");
+
+            //Console.WriteLine($"Lv.{player.Level} {player.Name}");
+
+            //prevPlayer와 player의 레벨이 다르다면 표시
+            //Console.Write(" -> ");
+            //Console.WriteLine($"{player.Level}({player.Name})");
+
+            //Console.WriteLine($"HP {player.Hp} {player.Name}");
+            //prevPlayer와 player의 HP가 다르다면 표시
+            //Console.Write(" -> ");
+
+            //Console.WriteLine($"EXP {player.Hp}");
+            //prevPlayer와 player의 EXP가 다르다면 표시
+            //Console.Write(" -> ");
+            //Console.WriteLine();
+
+            //Console.WriteLine("[획득 아이템]");
+            //잡음 몬스터 리스트에 대응하는 드랍 테이블
+
         }
 
         #endregion
