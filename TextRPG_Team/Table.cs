@@ -13,11 +13,4 @@ namespace TextRPG_Team.Table
         public int StackEXP { get; set; }
     }
 
-    public class DropTable
-    {
-        public int id { get; set; }
-        public string Item { get; set; } = string.Empty;
-        public float Rate { get; set; }
-    }
-
 }
