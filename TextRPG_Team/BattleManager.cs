@@ -6,16 +6,20 @@
         private Character player;
         private Monster[] monsters;
 
+        private Dungeon dungeon;
+
         //생성자
-        public BattleManager(Character player, Monster[] monsters)
+        public BattleManager(Character player, Monster[] monsters, Dungeon dungeon)
         {
             this.player = player;
             this.monsters = monsters;
+            this.dungeon = dungeon;
+
             ShuffleMonsters(); // 몬스터 배열 섞기
         }
 
         //전투 시작과 진행
-        public void StartBattle(Character player)
+        public void StartBattle(Character player, Dungeon dungeon)
         {
 
             while (true)
@@ -37,7 +41,12 @@
                 MonsterTurn();
 
                 if (CheckBattleEnd())
-                    Program.DisplayGameIntro();
+                {
+                    if (CheckAllMonstersDead())
+                        dungeon.ClearDungeon(); // 던전 클리어 처리
+                    else
+                        Program.DisplayGameIntro();
+                }
             }
 
         }
@@ -57,6 +66,8 @@
             }
 
             monsters = newMonstersList.ToArray(); // 복제된 몬스터들을 배열로 변환하여 할당
+            
+            //몬스터 수 업데이트
         }
 
         //전투 시작화면
@@ -216,6 +227,17 @@
             }
 
             return false;
+        }
+
+        //모든 몬스터가 사망했는지 확인
+        bool CheckAllMonstersDead()
+        {
+            foreach (var monster in monsters)
+            {
+                if (!monster.IsDead)
+                    return false;
+            }
+            return true;
         }
 
         //텍스트 색상 지정

@@ -4,7 +4,7 @@ namespace TextRPG_Team
 {
     public class Program 
     {
-        private static Character player;
+        public static Character player;
         private static Character[] jobs;
 
         private static Monster[] monsters;
@@ -12,6 +12,8 @@ namespace TextRPG_Team
         private static Item[] inventory;
         private static int ItemCount;
         private static int equipmentCount;
+
+        private static Dungeon dungeon;
 
         static void Main(string[] args)
         {
@@ -78,7 +80,7 @@ namespace TextRPG_Team
 
             // 아이템 추가
             AddItem(new Equipment("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 5));
-            AddItem(new Equipment("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", 2, 0));
+            AddItem(new Equipment("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", 200, 0));
             AddItem(new Consumable("HP 포션", "체력을 회복해주는 물약입니다.", player.HealHP, 30, 3));
             AddItem(new Consumable("MP 포션", "마나를 회복해주는 물약입니다.", player.HealMP, 30, 3));
 
@@ -228,7 +230,8 @@ namespace TextRPG_Team
             Console.WriteLine();
             Console.WriteLine("원하시는 행동을 입력해주세요.");
 
-            BattleManager battle = new BattleManager(player, monsters);
+            BattleManager battle = new BattleManager(player, monsters, dungeon);
+            Dungeon dungeons = new Dungeon(1, monsters);
 
             int input = CheckValidInput(1, 3);
             switch (input)
@@ -240,7 +243,7 @@ namespace TextRPG_Team
                     DisplayInventory();
                     break;
                 case 3:
-                    battle.StartBattle(player);
+                    dungeons.EnterDungeon();
                     break;
             }
         }
