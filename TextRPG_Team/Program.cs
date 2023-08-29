@@ -153,17 +153,9 @@ namespace TextRPG_Team
             player = characterList[input - 1];
             player.Name = chrName;
 
-            //switch (input)
-            //{
-            //    case 1:
-            //        break;
-            //    case 2:
-            //        break;
-            //    case 3:
-            //        break;
-            //    case 4:
-            //        break;
-            //}
+            // 초기 스킬 하나일 경우
+            // player = jobs[input - 1];
+            // player.Skills.Add(characterList[input - 1].Skills[0]);
         }
         static void DisplayGameIntro()
         {
