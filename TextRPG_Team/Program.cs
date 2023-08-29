@@ -24,7 +24,7 @@
 
         // 아이템 추가
         AddItem(new Item("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 5));
-        AddItem(new Item("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", 2, 0));
+        AddItem(new Item("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", 200, 0));
 
         monsters = new Monster[]
         {
@@ -55,7 +55,7 @@
         item.IsEquiped = false;
     }
 
-    static int GetItemAtkAmount()
+    public static int GetItemAtkAmount()
     {
         int itemAtk = 0;
         for (int i = 0; i < inventory.Length; i++)
@@ -93,7 +93,7 @@
 
     #region 게임 화면 출력
 
-    static void DisplayGameIntro()
+    public static void DisplayGameIntro()
     {
         Console.Clear();
 
@@ -105,7 +105,9 @@
         Console.WriteLine("3. 전투");
         Console.WriteLine();
         Console.WriteLine("원하시는 행동을 입력해주세요.");
-        BattleManager stage1 = new BattleManager(player, monsters);
+
+        BattleManager battle = new BattleManager(player, monsters);
+
         int input = CheckValidInput(1, 3);
         switch (input)
         {
@@ -117,7 +119,7 @@
                 DisplayInventory();
                 break;
             case 3:
-                stage1.StartBattle(player);
+                battle.StartBattle(player);
                 break;
         }
     }
@@ -269,7 +271,7 @@
 
     #region Utility
 
-    static int CheckValidInput(int min, int max)
+    public static int CheckValidInput(int min, int max)
     {
         while (true)
         {
@@ -286,14 +288,14 @@
         }
     }
 
-    static void DisplayTitle(string title)
+    public static void DisplayTitle(string title)
     {
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine(title);
         Console.ResetColor();
     }
 
-    static void DisplayError(string error)
+    public static void DisplayError(string error)
     {
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine(error);

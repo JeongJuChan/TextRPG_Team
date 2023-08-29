@@ -16,13 +16,7 @@
         CurrentHp = maxHp;
         Atk = attack;
     }
-    Random random = new Random();
-    public int CalculateDamage()
-    {
-        double variation = 1.0 + (random.NextDouble() * 0.2 - 0.1); // 0.9 ~ 1.1 사이의 랜덤값
-        double damage = Atk * variation;
-        return (int)Math.Ceiling(damage);
-    }
+    
     public Monster Clone()
     {
         return new Monster(Name, Level, MaxHp, Atk);
