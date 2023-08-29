@@ -1,9 +1,12 @@
 namespace TextRPG_Team
 {
-    internal class Program
+    public class Program 
     {
         private static Character player;
         private static Character[] jobs;
+
+        private static BattleManager battleManager;
+        private static Monster[] monsters;
 
         private static Item[] inventory;
         private static int ItemCount;
@@ -15,15 +18,10 @@ namespace TextRPG_Team
             DisplayGameIntro();
         }
 
-        #region 초기화
-
         static void GameDataSetting()
         {
-            CharacterSkills characterSkills = new CharacterSkills();
-
-
             // 캐릭터 정보 세팅
-            player = new Character("초기값", "초기값", 1, 10, 5, 100, 50, 1500);
+            player = new Character("Chad", "전사", 1, 10, 5, 100, 50, 1500);
 
             // 직업 정보 세팅
             jobs = new Character[4];
@@ -32,7 +30,10 @@ namespace TextRPG_Team
             jobs[2] = new Character("마법사", "마법사", 1, 9, 6, 80, 100, 1500);
             jobs[3] = new Character("도적", "도적", 1, 10, 5, 80, 70, 1500);
 
-            /*#region 캐릭터 저장
+            // 스킬 정보 세팅
+
+            CharacterSkills characterSkills = new CharacterSkills();
+
             List<Character> charList = new List<Character>(jobs);
             charList[0].Skills.Add(new SigleSkill("알파 스트라이크", $"공격력 * 2 로 하나의 적을 공격합니다.", 10, player.Atk, 2, characterSkills.AttackSigleTarget));
             charList[0].Skills.Add(new MultipleSkill("더블 스트라이크", "공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.", 15, player.Atk, 1.5f, characterSkills.AttackMutipleTarget));
@@ -46,11 +47,7 @@ namespace TextRPG_Team
             charList[3].Skills.Add(new SigleSkill("급소 베기", "공격력 * 2로 하나의 적을 공격합니다.", 15, player.Atk, 2f, characterSkills.AttackSigleTarget));
             charList[3].Skills.Add(new MultipleSkill("암기 던지기", "공격력 * 2로 두 명의 적을 공격합니다.", 20, player.Atk, 2f, characterSkills.AttackMutipleTarget));
 
-
             JsonUtility.Save(charList, "characterlist");
-
-
-            #endregion*/
 
             //데이터 불러오기
             Character Save_player = JsonUtility.Load<Character>("player");
@@ -78,9 +75,16 @@ namespace TextRPG_Team
             AddItem(new Equipment("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", 2, 0));
             AddItem(new Consumable("HP 포션", "체력을 회복해주는 물약입니다.", player.HealHP, 30, 3));
             AddItem(new Consumable("MP 포션", "마나를 회복해주는 물약입니다.", player.HealMP, 30, 3));
-        }
 
-        #endregion
+            monsters = new Monster[]
+            {
+                new Monster("Lv.2 미니언", 2, 15, 5),
+                new Monster("Lv.5 대포미니언", 5, 25, 8),
+                new Monster("Lv.3 공허충", 3, 10, 9)
+            };
+
+        
+        }
 
         #region 아이템 관리
 
@@ -108,7 +112,7 @@ namespace TextRPG_Team
         {
             item.Consume();
             item.Count--;
-            
+
             if (item.Count == 0)
             {
                 int index = Array.IndexOf(inventory, item);
@@ -147,7 +151,7 @@ namespace TextRPG_Team
                         SwapItem(i, equipmentCount - 1);
                     }
                 }
-                
+
             }
         }
 
@@ -165,7 +169,7 @@ namespace TextRPG_Team
             {
                 if (inventory[i] == null)
                     break;
-                
+
                 Item curItem = inventory[i];
                 if (curItem.Type == ItemType.Equipment)
                 {
@@ -199,6 +203,78 @@ namespace TextRPG_Team
 
             return itemDef;
         }
+
+        #endregion
+
+        #region 게임 화면 출력
+
+        public static void DisplayGameIntro()
+        {
+            Console.Clear();
+
+            Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.");
+            Console.WriteLine("이곳에서 전전으로 들어가기 전 활동을 할 수 있습니다.");
+            Console.WriteLine();
+            Console.WriteLine("1. 상태보기");
+            Console.WriteLine("2. 인벤토리");
+            Console.WriteLine("3. 전투");
+            Console.WriteLine();
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
+
+            BattleManager battle = new BattleManager(player, monsters);
+
+            int input = CheckValidInput(1, 3);
+            switch (input)
+            {
+                case 1:
+                    DisplayMyInfo();
+                    break;
+                case 2:
+                    DisplayInventory();
+                    break;
+                case 3:
+                    battle.StartBattle(player);
+                    break;
+            }
+        }
+
+        static void DisplayMyInfo()
+        {
+            Console.Clear();
+
+            DisplayTitle("상태보기");
+            Console.WriteLine("캐릭터의 정보를 표시합니다.");
+            Console.WriteLine();
+            Console.WriteLine($"Lv.{player.Level}");
+            Console.WriteLine($"{player.Name}({player.Job})");
+
+            int itemAtk = GetItemAtkAmount();
+            Console.Write($"공격력 :{player.Atk + itemAtk}");
+            if (itemAtk != 0)
+                Console.Write($"(+{itemAtk})");
+            Console.WriteLine();
+
+            int itemDef = GetItemDefAmount();
+            Console.Write($"방어력 : {player.Def + itemDef}");
+            if (itemDef != 0)
+                Console.Write($"(+{itemDef})");
+            Console.WriteLine();
+
+            Console.WriteLine($"체력 : {player.CurrentHp}");
+            Console.WriteLine($"Gold : {player.Gold} G");
+            Console.WriteLine();
+            Console.WriteLine("0. 나가기");
+
+            int input = CheckValidInput(0, 0);
+            switch (input)
+            {
+                case 0:
+                    DisplayGameIntro();
+                    break;
+            }
+        }
+
+        #endregion
 
         #region 게임 화면 출력
 
@@ -240,67 +316,6 @@ namespace TextRPG_Team
             }*/
 
         }
-        static void DisplayGameIntro()
-        {
-            Console.Clear();
-
-            Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.");
-            Console.WriteLine("이곳에서 전전으로 들어가기 전 활동을 할 수 있습니다.");
-            Console.WriteLine();
-            Console.WriteLine("1. 상태보기");
-            Console.WriteLine("2. 인벤토리");
-            Console.WriteLine();
-            Console.WriteLine("원하시는 행동을 입력해주세요.");
-
-            int input = CheckValidInput(1, 2);
-            switch (input)
-            {
-                case 1:
-                    DisplayMyInfo();
-                    break;
-
-                case 2:
-                    DisplayInventory();
-                    break;
-            }
-        }
-
-        static void DisplayMyInfo()
-        {
-            Console.Clear();
-
-            DisplayTitle("상태보기");
-            Console.WriteLine("캐릭터의 정보를 표시합니다.");
-            Console.WriteLine();
-            Console.WriteLine($"Lv.{player.Level}");
-            Console.WriteLine($"{player.Name}({player.Job})");
-
-            int itemAtk = GetItemAtkAmount();
-            Console.Write($"공격력 :{player.Atk + itemAtk}");
-            if (itemAtk != 0)
-                Console.Write($"(+{itemAtk})");
-            Console.WriteLine();
-
-            int itemDef = GetItemDefAmount();
-            Console.Write($"방어력 : {player.Def + itemDef}");
-            if (itemDef != 0)
-                Console.Write($"(+{itemDef})");
-            Console.WriteLine();
-
-            Console.WriteLine($"체력 : {player.Hp}");
-            Console.WriteLine($"Gold : {player.Gold} G");
-            Console.WriteLine();
-            Console.WriteLine("0. 나가기");
-
-            int input = CheckValidInput(0, 0);
-            switch (input)
-            {
-                case 0:
-                    DisplayGameIntro();
-                    break;
-            }
-        }
-
 
         static void DisplayInventory()
         {
@@ -595,7 +610,7 @@ namespace TextRPG_Team
             return "공격했지만 아무일도 일어나지 않았습니다.";
         }
         #endregion
-
-        #endregion
     }
 }
+    
+
