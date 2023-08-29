@@ -223,6 +223,7 @@ namespace TextRPG_Team
             WriteColored("Battle!! - Result", ConsoleColor.Yellow);
             Console.WriteLine();
 
+            // 잡은 몬스터(killedMonster)가 있으면 "Victory" 표시
             string resultHeader = killedMonster.Count!=0 ? "Victory" : "You Lose";
             Console.WriteLine(resultHeader);
             Console.WriteLine();
@@ -230,6 +231,7 @@ namespace TextRPG_Team
             Console.WriteLine($"던전에서 몬스터 {killedMonster.Count}마리를 잡았습니다.");
             Console.WriteLine();
 
+            // 파라미터(level, hp, exp)에 변화가 생겼다면 얼마나 변했는지 표시
             string[] prefix = new string[3];
             prefix[0] = "Lv.";
             if (prevPlayer.Level != player.Level)
@@ -249,6 +251,8 @@ namespace TextRPG_Team
             Console.WriteLine(prefix[2] + $"{player.CurrentExp}");
             Console.WriteLine();
 
+            // 몬스터를 잡아 획득한 골드, 아이템을 정산해서 인벤토리에 추가
+            // 드랍 아이템은 몬스터마다 아이템 1개씩 고정 (랜덤드랍X)
             if (killedMonster.Count != 0)
             {
                 List<Item> drops = new List<Item>();
