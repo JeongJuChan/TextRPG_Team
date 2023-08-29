@@ -7,6 +7,7 @@ namespace TextRPG_Team
 
         private static Item[] inventory;
         private static int ItemCount;
+        private static int equipmentCount;
 
         static void Main(string[] args)
         {
@@ -31,8 +32,8 @@ namespace TextRPG_Team
             jobs[2] = new Character("마법사", "마법사", 1, 9, 6, 80, 100, 1500);
             jobs[3] = new Character("도적", "도적", 1, 10, 5, 80, 70, 1500);
 
-            #region 캐릭터 저장
-/*          List<Character> charList = new List<Character>(jobs);
+            /*#region 캐릭터 저장
+            List<Character> charList = new List<Character>(jobs);
             charList[0].Skills.Add(new SigleSkill("알파 스트라이크", $"공격력 * 2 로 하나의 적을 공격합니다.", 10, player.Atk, 2, characterSkills.AttackSigleTarget));
             charList[0].Skills.Add(new MultipleSkill("더블 스트라이크", "공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.", 15, player.Atk, 1.5f, characterSkills.AttackMutipleTarget));
 
@@ -46,28 +47,28 @@ namespace TextRPG_Team
             charList[3].Skills.Add(new MultipleSkill("암기 던지기", "공격력 * 2로 두 명의 적을 공격합니다.", 20, player.Atk, 2f, characterSkills.AttackMutipleTarget));
 
 
-            JsonUtility.Save(charList, "characterlist");*/
+            JsonUtility.Save(charList, "characterlist");
 
-            
-            #endregion
+
+            #endregion*/
 
             //데이터 불러오기
             Character Save_player = JsonUtility.Load<Character>("player");
 
 
             //게임 데이터 있을 경우 DisplayGameIntro 실행 / 없을 경우 DisplayCharacterCustom 실행
-            DisplayCharacterCustom();
+            //DisplayCharacterCustom();
 
-            // 주찬 : 테스트 하려고 잠깐 주석 해놨어요 
-            //if (Save_player == null)
-            //{
-            //    //DisplayCharacterCustom();
-            //    JsonUtility.Save(player, "player");
-            //}
-            //else
-            //{
-            //    player = Save_player;
-            //}
+            // 주찬: 테스트 하려고 잠깐 주석 해놨어요
+            if (Save_player == null)
+            {
+                DisplayCharacterCustom();
+                JsonUtility.Save(player, "player");
+            }
+            else
+            {
+                player = Save_player;
+            }
 
             // 인벤토리 생성
             inventory = new Item[10];
@@ -87,6 +88,10 @@ namespace TextRPG_Team
         {
             inventory[ItemCount] = item;
             ++ItemCount;
+            if (item.Type == ItemType.Equipment)
+            {
+                ++equipmentCount;
+            }
         }
 
         static void EquipItem(Equipment item)
@@ -101,11 +106,11 @@ namespace TextRPG_Team
 
         static void UseItem(Consumable item)
         {
+            item.Consume();
             item.Count--;
             
             if (item.Count == 0)
             {
-                item.Consume();
                 int index = Array.IndexOf(inventory, item);
                 inventory[index] = null;
 
@@ -118,8 +123,39 @@ namespace TextRPG_Team
         {
             for (int i = sortIndex; i < ItemCount - 1; i++)
             {
-                inventory[i] = inventory[i + 1];
+                SwapItem(i, i + 1);
             }
+        }
+
+        private static void InvenSort()
+        {
+            // TODO : 장비, 회복 아이템 선택하는 창에서 장비와 회복 아이템을 분리해놓지 않으면 문제가 생김
+            // 분리해서 정렬하는 로직이 필요
+            for (int i = 0; i < ItemCount; i++)
+            {
+                if (i < equipmentCount)
+                {
+                    if (inventory[i].Type == ItemType.Consumable)
+                    {
+                        SwapItem(i, ItemCount - 1);
+                    }
+                }
+                else
+                {
+                    if (inventory[i].Type == ItemType.Equipment)
+                    {
+                        SwapItem(i, equipmentCount - 1);
+                    }
+                }
+                
+            }
+        }
+
+        private static void SwapItem(int i, int j)
+        {
+            Item item = inventory[i];
+            inventory[i] = inventory[j];
+            inventory[j] = item;
         }
 
         static int GetItemAtkAmount()
@@ -286,31 +322,32 @@ namespace TextRPG_Team
 
                 
                 Item curItem = inventory[i];
-                if (curItem.Type == ItemType.Equipment)
-                {
-                    Equipment equipment = (Equipment)curItem;
-                    if (equipment.IsEquiped)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("[E] ");
-                        Console.ForegroundColor = ConsoleColor.White;
-                    }
-                    Console.Write($"{curItem.Name} | ");
-                    if (equipment.Atk != 0) Console.Write($" 공격력 +{equipment.Atk} ");
-                    if (equipment.Def != 0) Console.Write($" 방어력 +{equipment.Def} ");
-                    Console.Write($" | {curItem.Description}");
-                    Console.WriteLine();
-                }
 
-                
+                switch (curItem.Type)
+                {
+                    case ItemType.Equipment:
+                        DisplayEquipment(curItem);
+                        break;
+                    case ItemType.Consumable:
+                        Console.ResetColor();
+                        Consumable consumable = (Consumable)curItem;
+                        Console.BackgroundColor = ConsoleColor.DarkBlue;
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write($"{curItem.Name} | ");
+                        Console.Write($"개수 : {consumable.Count}");
+                        Console.Write($" | {curItem.Description}");
+                        Console.WriteLine();
+                        break;
+                }
             }
             Console.ResetColor();
 
             Console.WriteLine();
             Console.WriteLine("1. 장착 관리");
+            Console.WriteLine("2. 회복 아이템");
             Console.WriteLine("0. 나가기");
 
-            int input = CheckValidInput(0, 1);
+            int input = CheckValidInput(0, 2);
             switch (input)
             {
                 case 0:
@@ -320,7 +357,86 @@ namespace TextRPG_Team
                 case 1:
                     DisplayManageEquipment();
                     break;
+
+                case 2:
+                    DisplayConsumableItem();
+                    break;
             }
+        }
+
+        private static void DisplayConsumableItem()
+        {
+            Console.Clear();
+
+            DisplayTitle("회복");
+            Console.WriteLine("포션을 사용하면 체력/마나를 회복할 수 있습니다.");
+            Console.WriteLine();
+
+            Console.BackgroundColor = ConsoleColor.DarkGreen;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("[아이템 목록]");
+
+            for (int i = 0; i < inventory.Length; i++)
+            {
+                if (inventory[i] == null)
+                    break;
+
+                Item curItem = inventory[i];
+
+                if (curItem.Type == ItemType.Consumable)
+                {
+                    Console.Write($"{i + 1} ");
+                    Consumable consumable = (Consumable)curItem;
+                    Console.Write($"{curItem.Name} | ");
+                    Console.Write($"개수 : {consumable.Count}");
+                    Console.Write($" | {curItem.Description}");
+                    Console.WriteLine();
+                }
+            }
+            Console.ResetColor();
+
+            Console.WriteLine();
+            Console.WriteLine("0. 나가기");
+
+            int consumableStartIdx = ItemCount == equipmentCount ? 0 : ItemCount - equipmentCount + 1;
+            int consumableLength = ItemCount == equipmentCount ? 0 : ItemCount;
+            int input = CheckValidInput(consumableStartIdx, consumableLength);
+            if (input == 0)
+            {
+                DisplayInventory();
+            }
+            else if (input >= consumableStartIdx && input <= ItemCount)
+            {
+                Item curItem = inventory[input - 1];
+
+                if (curItem.Type == ItemType.Consumable)
+                {
+                    Consumable consumable = (Consumable)curItem;
+                    UseItem(consumable);
+                }
+
+                DisplayConsumableItem();
+            }
+            else
+            {
+                DisplayConsumableItem();
+            }
+        }
+
+        private static void DisplayEquipment(Item curItem)
+        {
+            Equipment equipment = (Equipment)curItem;
+            if (equipment.IsEquiped)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("[E] ");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            Console.Write($"{curItem.Name} | ");
+            if (equipment.Atk != 0) Console.Write($" 공격력 +{equipment.Atk} ");
+            if (equipment.Def != 0) Console.Write($" 방어력 +{equipment.Def} ");
+            Console.Write($" | {curItem.Description}");
+            Console.WriteLine();
         }
 
         static void DisplayManageEquipment()
@@ -342,10 +458,11 @@ namespace TextRPG_Team
 
                 Item curItem = inventory[i];
 
-                Console.Write($"{i + 1} ");
                 if (curItem.Type == ItemType.Equipment)
                 {
-                    Equipment equipment = (Equipment) curItem;
+
+                    Console.Write($"{i + 1} ");
+                    Equipment equipment = (Equipment)curItem;
 
                     if (equipment.IsEquiped)
                     {
@@ -365,12 +482,12 @@ namespace TextRPG_Team
             Console.WriteLine();
             Console.WriteLine("0. 나가기");
 
-            int input = CheckValidInput(0, ItemCount);
+            int input = CheckValidInput(0, equipmentCount);
             if (input == 0)
             {
                 DisplayInventory();
             }
-            else if (input > 0 && input <= ItemCount)
+            else if (input > 0 && input <= equipmentCount)
             {
                 Item curItem = inventory[input - 1];
 
@@ -400,8 +517,9 @@ namespace TextRPG_Team
                 bool parseSuccess = int.TryParse(input, out var ret);
                 if (parseSuccess)
                 {
-                    if (ret >= min && ret <= max)
+                    if ((ret >= min && ret <= max) || ret == 0)
                         return ret;
+                   
                 }
 
                 DisplayError("잘못된 입력입니다.");

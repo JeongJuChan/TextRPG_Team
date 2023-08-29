@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TextRPG_Team
+﻿namespace TextRPG_Team
 {
     public enum SkillType
     {
@@ -49,11 +43,7 @@ namespace TextRPG_Team
         // 2. 스킬 항목 추가
         
         // TODO :
-        // 직업에 맞는 스킬 추가
-        // - 메서드 늘리기
         // Program에 있는 배틀 로직 배틀 쪽에 붙이기
-
-        // GameData Settings 쪽에 Switch 문으로 캐릭터 선택과 생성이 완료 되면 Skill을 자동으로 추가
 
         public string Name { get; }
         public SkillType Type { get; }
