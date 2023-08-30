@@ -63,6 +63,5 @@ namespace TextRPG_Team
             BuyGold = buyGold;
             SellGold = sellGold;
         }
-
     }
 }
