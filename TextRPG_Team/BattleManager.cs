@@ -1,43 +1,55 @@
-﻿namespace TextRPG_Team
+﻿using System.Net.NetworkInformation;
+
+namespace TextRPG_Team
 {
     public class BattleManager
     {
         private Random Random = new Random();
         private Character player;
         private Monster[] monsters;
+        private Character prevPlayer;
+        private List<Monster> killedMonster;
 
         //생성자
-        public BattleManager(Character player, Monster[] monsters)
+        public BattleManager(Character player, Monster[] monsters, Item[] inventory)
         {
-            this.player = player;
+            this.player = prevPlayer = player;
             this.monsters = monsters;
-            ShuffleMonsters(); // 몬스터 배열 섞기
+            prevPlayer = new Character(player);
+            killedMonster = new List<Monster>();
+
+            ShuffleMonsters(); // 몬스터 배열
         }
 
         //전투 시작과 진행
         public void StartBattle(Character player)
         {
-
             while (true)
             {
-                DisplayBattleScreen(false); //전투 화면 표시
-                int input = Program.CheckValidInput(0, 1);
-                switch (input)
-                {
-                    case 0:
-                        Program.DisplayGameIntro();
-                        break;
-
-                    case 1:
-                        DisplayBattleScreen(true);
-                        break;
-                }
-
-                PlayerTurn();
-                MonsterTurn();
-
                 if (CheckBattleEnd())
+                {
+                    DisplayerResult();
                     Program.DisplayGameIntro();
+                }
+                else
+                {
+                    DisplayBattleScreen(false); //전투 화면 표시
+                    int input = Program.CheckValidInput(0, 1);
+                    switch (input)
+                    {
+                        case 0:
+                            DisplayerResult();
+                            Program.DisplayGameIntro();
+                            break;
+
+                        case 1:
+                            DisplayBattleScreen(true);
+                            break;
+                    }
+
+                    PlayerTurn();
+                    MonsterTurn();
+                }
             }
 
         }
@@ -124,6 +136,7 @@
             {
                 Console.WriteLine($"{monsters[targetIndex].Name}");
                 Console.WriteLine("HP 0 -> Dead");
+                killedMonster.Add(monsters[targetIndex]);
             }
             Console.WriteLine();
             Console.WriteLine("아무 키를 눌러 계속");
@@ -180,42 +193,87 @@
                 }
             }
 
-            if (allMonstersDead)
+            if (allMonstersDead || player.CurrentHp <= 0)
             {
-                Console.Clear();
-                WriteColored("Battle!! - Result", ConsoleColor.Yellow);
-                Console.WriteLine();
-                Console.WriteLine("Victory");
-                Console.WriteLine();
-                Console.WriteLine($"던전에서 몬스터 {monsters.Length}마리를 잡았습니다.");
-                Console.WriteLine();
-
-                Console.WriteLine($"{player.Name} (Lv.{player.Level})");
-                Console.WriteLine($"HP {player.CurrentHp}/{player.MaxHp}");
-                Console.WriteLine();
-                Console.WriteLine("아무 키를 눌러 계속");
-                Console.Write(">> ");
-                Console.ReadLine();
-                return true;
-            }
-
-            if (player.CurrentHp <= 0)
-            {
-                Console.Clear();
-                WriteColored("Battle!! - Result", ConsoleColor.Yellow);
-                Console.WriteLine();
-                Console.WriteLine("You Lose");
-                Console.WriteLine();
-                Console.WriteLine($"{player.Name} (Lv.{player.Level})");
-                Console.WriteLine($"HP {player.CurrentHp}/{player.MaxHp}");
-                Console.WriteLine();
-                Console.WriteLine("아무 키를 눌러 계속");
-                Console.Write(">> ");
-                Console.ReadLine();
                 return true;
             }
 
             return false;
+        }
+
+        void DisplayerResult()
+        {
+            Console.Clear();
+
+            // 경험치 및 드랍 테이블 작성
+            List<Table.ExpTable>? expTable = JsonUtility.Load<List<Table.ExpTable>>("ExpTable");
+
+            foreach (var monster in killedMonster)
+            {
+                player.CurrentExp += monster.Level * 1;
+                player.Gold += monster.Gold;
+            }
+
+            foreach (var exp in expTable)
+            {
+                if ((exp.id == player.Level) && (player.CurrentExp >= (exp.NeedEXP + exp.StackEXP)))
+                    player.Level += 1;
+            }
+
+            WriteColored("Battle!! - Result", ConsoleColor.Yellow);
+            Console.WriteLine();
+
+            string resultHeader = killedMonster.Count!=0 ? "Victory" : "You Lose";
+            Console.WriteLine(resultHeader);
+            Console.WriteLine();
+
+            Console.WriteLine($"던전에서 몬스터 {killedMonster.Count}마리를 잡았습니다.");
+            Console.WriteLine();
+
+            string[] prefix = new string[3];
+            prefix[0] = "Lv.";
+            if (prevPlayer.Level != player.Level)
+                prefix[0] += $"{prevPlayer.Level} {prevPlayer.Name} -> ";
+
+            prefix[1] = "HP ";
+            if (prevPlayer.CurrentHp != player.CurrentHp)
+                prefix[1] += $"{prevPlayer.CurrentHp} -> ";
+
+            prefix[2] = "EXP ";
+            if (prevPlayer.CurrentExp != player.CurrentExp)
+                prefix[2] += $"{prevPlayer.CurrentExp} -> ";
+
+            Console.WriteLine("[캐릭터 정보]");
+            Console.WriteLine(prefix[0] + $"{player.Level} {player.Name}");
+            Console.WriteLine(prefix[1] + $"{player.CurrentHp}");
+            Console.WriteLine(prefix[2] + $"{player.CurrentExp}");
+            Console.WriteLine();
+
+            if (killedMonster.Count != 0)
+            {
+                List<Item> drops = new List<Item>();
+                int dropGold = 0;
+                foreach (var monster in killedMonster)
+                {
+                    drops.Add(monster.DropItem);
+                    dropGold += monster.Gold;
+                }
+
+                Console.WriteLine("[획득 아이템]");
+                Console.WriteLine($"{dropGold} Gold");
+                foreach (var item in drops)
+                {
+                    Console.WriteLine($"{item.Name} - {drops.Count(x => { return x.Name == item.Name; })}");
+                }
+                Console.WriteLine();
+
+                player.Gold += dropGold;
+                Program.DropItem(drops);// 드랍 관련 처리
+            }
+
+            Console.WriteLine("아무 키를 눌러 계속");
+            Console.Write(">> ");
+            Console.ReadLine();
         }
 
         //텍스트 색상 지정
