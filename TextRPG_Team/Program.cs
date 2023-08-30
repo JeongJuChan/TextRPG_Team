@@ -116,13 +116,39 @@ namespace TextRPG_Team
 
         static void AddItem(Item item)
         {
-            inventory[ItemCount] = item;
-            ++ItemCount;
-            if (item.Type == ItemType.Equipment)
+            if (inventory.Length / 2 < ItemCount)
             {
-                ++equipmentCount;
+                ExtendInventory();
             }
-            InvenSort();
+
+            if (inventory.Contains(item) && item.Type == ItemType.Consumable)
+            {
+                int index = Array.IndexOf(inventory, item);
+                Consumable consumableItem = (Consumable)inventory[index];
+                consumableItem.Count += 3;
+                inventory[index] = consumableItem;
+            }
+            else
+            {
+                inventory[ItemCount] = item;
+                ++ItemCount;
+                if (item.Type == ItemType.Equipment)
+                {
+                    ++equipmentCount;
+                }
+                InvenSort();
+            }
+        }
+
+        private static void ExtendInventory()
+        {
+            var newInven = new Item[inventory.Length * 2];
+            for (int i = 0; i < inventory.Length; i++)
+            {
+                newInven[i] = inventory[i];
+            }
+
+            inventory = newInven;
         }
 
         static void EquipItem(Equipment item)
