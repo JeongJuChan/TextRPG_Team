@@ -9,7 +9,7 @@ namespace TextRPG_Team
 
         private static Monster[] monsters;
 
-        private static Item[] inventory;
+        private static Item[] Items;
         private static int ItemCount;
         private static int equipmentCount;
 
@@ -75,20 +75,50 @@ namespace TextRPG_Team
             }
 
             // 인벤토리 생성
-            inventory = new Item[10];
+            Items = new Item[10];
 
             // 아이템 추가
-            AddItem(new Equipment("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 5));
-            AddItem(new Equipment("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", 2, 0));
-            AddItem(new Consumable("HP 포션", "체력을 회복해주는 물약입니다.", player.HealHP, 30, 3));
-            AddItem(new Consumable("MP 포션", "마나를 회복해주는 물약입니다.", player.HealMP, 30, 3));
+            AddItem(new Equipment("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 5, true, 500, 300));
+            AddItem(new Equipment("수련자 갑옷", "수련에 도움을 주는 갑옷입니다.", 0, 9, false, 1500, 1000));
+            AddItem(new Equipment("황금 갑옷", "황금으로 만들어져 튼튼한 갑옷입니다.", 0, 13, false, 2500, 2000));
+            AddItem(new Equipment("스파르타의 갑옷", "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.", 0, 15, false, 3500, 3000));
+            if (player.Job == "전사")
+            {
+                AddItem(new Equipment("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", 2, 0, true, 500, 300));
+                AddItem(new Equipment("철제 검", "철로 만든 검입니다.", 5, 0, false, 1500, 300));
+                AddItem(new Equipment("황금 검", "황금으로 만든 검입니다.", 8, 0, false, 2500, 300));
+                AddItem(new Equipment("전설의 검", "전설의 전사가 사용했던 검입니다.", 11, 0, false, 3500, 300));
+            }
+            else if (player.Job == "궁수")
+            {
+                AddItem(new Equipment("낡은 활", "쉽게 볼 수 있는 낡은 활입니다.", 2, 0, true, 500, 300));
+                AddItem(new Equipment("철제 활", "철로 만든 활입니다.", 5, 0, false, 1500, 1300));
+                AddItem(new Equipment("황금 활", "황금으로 만든 활입니다.", 8, 0, false, 2500, 2300));
+                AddItem(new Equipment("전설의 활", "전설의 궁수가 사용했던 활입니다.", 11, 0, false, 3500, 3300));
+            }
+            else if (player.Job == "마법사")
+            {
+                AddItem(new Equipment("낡은 지팡이", "쉽게 볼 수 있는 낡은 지팡이입니다.", 2, 0, true, 500, 300));
+                AddItem(new Equipment("철제 지팡이", "철로 만든 지팡이입니다.", 5, 0, false, 1500, 1300));
+                AddItem(new Equipment("황금 지팡이", "황금으로 만든 지팡이입니다.", 8, 0, false, 2500, 2300));
+                AddItem(new Equipment("전설의 지팡이", "전설의 마법사가 사용했던 지팡이입니다.", 11, 0, false, 3500, 3300));
+            }
+            else if (player.Job == "도적")
+            {
+                AddItem(new Equipment("낡은 아대", "쉽게 볼 수 있는 낡은 아대입니다.", 2, 0, true, 500, 300));
+                AddItem(new Equipment("철제 아대", "철로 만든 아대입니다.", 5, 0, false, 1500, 1300));
+                AddItem(new Equipment("황금 아대", "황금으로 만든 아대입니다.", 8, 0, false, 2500, 2300));
+                AddItem(new Equipment("전설의 아대", "전설의 도적이 사용했던 아대입니다.", 11, 0, false, 3500, 3300));
+            }
+            AddItem(new Consumable("HP 포션", "체력을 회복해주는 물약입니다.", player.HealHP, 30, 3, true, 200, 100));
+            AddItem(new Consumable("MP 포션", "마나를 회복해주는 물약입니다.", player.HealMP, 30, 3, true, 200, 100));
 
             monsters = new Monster[]
             {
-                new Monster("Lv.1 미니언", 1, 10, 3, 10, inventory[0]),
-                new Monster("Lv.2 미니언", 2, 15, 5, 20, inventory[1]),
-                new Monster("Lv.5 대포미니언", 5, 25, 8, 50, inventory[2]),
-                new Monster("Lv.3 공허충", 3, 10, 9, 30, inventory[3])
+                new Monster("Lv.1 미니언", 1, 10, 3, 10, Items[0]),
+                new Monster("Lv.2 미니언", 2, 15, 5, 20, Items[1]),
+                new Monster("Lv.5 대포미니언", 5, 25, 8, 50, Items[2]),
+                new Monster("Lv.3 공허충", 3, 10, 9, 30, Items[3])
             };
         
         }
@@ -105,7 +135,7 @@ namespace TextRPG_Team
 
         static void AddItem(Item item)
         {
-            inventory[ItemCount] = item;
+            Items[ItemCount] = item;
             ++ItemCount;
             if (item.Type == ItemType.Equipment)
             {
@@ -131,8 +161,8 @@ namespace TextRPG_Team
 
             if (item.Count == 0)
             {
-                int index = Array.IndexOf(inventory, item);
-                inventory[index] = null;
+                int index = Array.IndexOf(Items, item);
+                Items[index] = null;
 
                 InvenSort(index);
                 ItemCount--;
@@ -155,14 +185,14 @@ namespace TextRPG_Team
             {
                 if (i < equipmentCount)
                 {
-                    if (inventory[i].Type == ItemType.Consumable)
+                    if (Items[i].Type == ItemType.Consumable)
                     {
                         SwapItem(i, ItemCount - 1);
                     }
                 }
                 else
                 {
-                    if (inventory[i].Type == ItemType.Equipment)
+                    if (Items[i].Type == ItemType.Equipment)
                     {
                         SwapItem(i, equipmentCount - 1);
                     }
@@ -173,20 +203,20 @@ namespace TextRPG_Team
 
         private static void SwapItem(int i, int j)
         {
-            Item item = inventory[i];
-            inventory[i] = inventory[j];
-            inventory[j] = item;
+            Item item = Items[i];
+            Items[i] = Items[j];
+            Items[j] = item;
         }
 
         public static int GetItemAtkAmount()
         {
             int itemAtk = 0;
-            for (int i = 0; i < inventory.Length; i++)
+            for (int i = 0; i < Items.Length; i++)
             {
-                if (inventory[i] == null)
+                if (Items[i] == null)
                     break;
 
-                Item curItem = inventory[i];
+                Item curItem = Items[i];
                 if (curItem.Type == ItemType.Equipment)
                 {
                     Equipment equipment = (Equipment)curItem;
@@ -201,12 +231,12 @@ namespace TextRPG_Team
         static int GetItemDefAmount()
         {
             int itemDef = 0;
-            for (int i = 0; i < inventory.Length; i++)
+            for (int i = 0; i < Items.Length; i++)
             {
-                if (inventory[i] == null)
+                if (Items[i] == null)
                     break;
 
-                Item curItem = inventory[i];
+                Item curItem = Items[i];
                 if (curItem.Type == ItemType.Equipment)
                 {
                     Equipment equipment = (Equipment)curItem;
@@ -233,13 +263,14 @@ namespace TextRPG_Team
             Console.WriteLine();
             Console.WriteLine("1. 상태보기");
             Console.WriteLine("2. 인벤토리");
-            Console.WriteLine("3. 전투");
+            Console.WriteLine("3. 상점");
+            Console.WriteLine("4. 전투");
             Console.WriteLine();
             Console.WriteLine("원하시는 행동을 입력해주세요.");
 
-            BattleManager battle = new BattleManager(player, monsters, inventory);
+            BattleManager battle = new BattleManager(player, monsters, Items);
 
-            int input = CheckValidInput(1, 3);
+            int input = CheckValidInput(1, 4);
             switch (input)
             {
                 case 1:
@@ -249,6 +280,9 @@ namespace TextRPG_Team
                     DisplayInventory();
                     break;
                 case 3:
+                    DisplayShop();
+                    break;
+                case 4:
                     battle.StartBattle(player);
                     break;
             }
@@ -315,6 +349,136 @@ namespace TextRPG_Team
             // player.Skills.Add(characterList[input - 1].Skills[0]);
         }
 
+        static void DisplayShop()
+        {
+            Console.Clear();
+            Console.WriteLine("상점");
+            Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
+            Console.WriteLine();
+            Console.WriteLine("[보유 골드]");
+            Console.WriteLine($"{player.Gold} G");
+            Console.WriteLine();
+            for (int i = 0; i < Items.Length; i++)
+            {
+                Item curItem = Items[i];
+
+                switch (curItem.Type)
+                {
+                    case ItemType.Equipment:
+                        DisplayShopEquipments(curItem);
+                        break;
+                    case ItemType.Consumable:
+                        Console.ResetColor();
+                        Consumable consumable = (Consumable)curItem;
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write($"{curItem.Name} | ");
+                        Console.Write($"개수 : {consumable.Count}");
+                        Console.Write($" | {curItem.Description}");
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.Write($"구매 금액 : {curItem.BuyGold}");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine();
+                        break;
+                }
+            }
+            Console.WriteLine();
+            Console.WriteLine("1. 아이템 구매 및 판매");
+            Console.WriteLine("0. 나가기");
+            Console.WriteLine();
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
+            Console.Write(">> ");
+            int input = CheckValidInput(0, 1);
+            switch (input)
+            {
+                case 0:
+                    DisplayGameIntro();
+                    break;
+                case 1:
+                    DisplayShopPurchaseOrSell();
+                    break;
+            }
+        }
+
+        //상점 구매 및 판매
+        static void DisplayShopPurchaseOrSell()
+        {
+            Console.Clear();
+            Console.WriteLine("상점 - 아이템 구매");
+            Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
+            Console.WriteLine();
+            Console.WriteLine("[보유 골드]");
+            Console.WriteLine($"{player.Gold} G");
+            Console.WriteLine();
+            for (int i = 0; i < Items.Length ; i++)
+            {
+                Item curItem = Items[i];
+
+                switch (curItem.Type)
+                {
+                    case ItemType.Equipment:
+                        Console.Write($"{i + 1}. ");
+                        DisplayShopEquipments(curItem);
+                        break;
+                    case ItemType.Consumable:
+                        Console.ResetColor();
+                        Consumable consumable = (Consumable)curItem;
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write($"{i + 1}. ");
+                        Console.Write($"{curItem.Name} | ");
+                        Console.Write($"개수 : {consumable.Count}");
+                        Console.Write($" | {curItem.Description}");
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.Write($"구매 금액 : {curItem.BuyGold}");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine();
+                        break;
+                }
+            }
+            Console.WriteLine();
+            Console.WriteLine("0. 나가기");
+            Console.WriteLine();
+            while (true)
+            {
+                Console.WriteLine("원하시는 행동을 입력해주세요.");
+                Console.Write(">> ");
+                int input = CheckValidInput(0, Items.Length);
+                if (input == 0)
+                {
+                    DisplayShop();
+                    break;
+                }
+                else
+                {
+                    if (Items[input - 1].IsHave == true && Items[input - 1].Type == ItemType.Equipment)
+                    {
+
+                        player.Gold += Items[input - 1].SellGold;
+                        Items[input - 1].IsHave = false;
+                        Items[input - 1].IsEquiped = false;
+                        DisplayShopPurchaseOrSell();
+                    }
+                    else if(Items[input - 1].IsHave == false || Items[input - 1].Type == ItemType.Consumable)
+                    {
+                        if (player.Gold < Items[input - 1].SellGold)
+                        {
+                            Console.WriteLine("Gold 가 부족합니다.");
+                        }
+                        else
+                        {
+                            player.Gold -= Items[input - 1].SellGold;
+                            Items[input - 1].IsHave = true;
+                            if (Items[input - 1].Type == ItemType.Consumable)
+                            {
+                                Consumable consumableItem = (Consumable)Items[input - 1];
+                                consumableItem.Count++;
+                            }
+                            DisplayShopPurchaseOrSell();
+                        }
+                    }
+                }
+            }
+        }
+
         static void DisplayInventory()
         {
             Console.Clear();
@@ -328,13 +492,13 @@ namespace TextRPG_Team
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("[아이템 목록]");
 
-            for (int i = 0; i < inventory.Length; i++)
+            for (int i = 0; i < Items.Length; i++)
             {
-                if (inventory[i] == null)
-                    break;
+                if (!Items[i].IsHave)
+                    continue;
 
                 
-                Item curItem = inventory[i];
+                Item curItem = Items[i];
 
                 switch (curItem.Type)
                 {
@@ -389,16 +553,21 @@ namespace TextRPG_Team
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("[아이템 목록]");
 
-            for (int i = 0; i < inventory.Length; i++)
+            int num = 1;
+            Dictionary<int, int> dic = new Dictionary<int, int>();
+
+            for (int i = 0; i < Items.Length; i++)
             {
-                if (inventory[i] == null)
+                if (Items[i] == null)
                     break;
 
-                Item curItem = inventory[i];
+                Item curItem = Items[i];
 
                 if (curItem.Type == ItemType.Consumable)
                 {
-                    Console.Write($"{i + 1} ");
+                    Console.Write($"{num} ");
+                    dic.Add(num, i);
+                    num++;
                     Consumable consumable = (Consumable)curItem;
                     Console.Write($"{curItem.Name} | ");
                     Console.Write($"개수 : {consumable.Count}");
@@ -413,14 +582,14 @@ namespace TextRPG_Team
 
             int consumableStartIdx = ItemCount == equipmentCount ? 0 : ItemCount - equipmentCount + 1;
             int consumableLength = ItemCount == equipmentCount ? 0 : ItemCount;
-            int input = CheckValidInput(consumableStartIdx, consumableLength);
+            int input = CheckValidInput(0, dic.Count);
             if (input == 0)
             {
                 DisplayInventory();
             }
-            else if (input >= consumableStartIdx && input <= ItemCount)
+            else
             {
-                Item curItem = inventory[input - 1];
+                Item curItem = Items[dic[input]];
 
                 if (curItem.Type == ItemType.Consumable)
                 {
@@ -428,10 +597,6 @@ namespace TextRPG_Team
                     UseItem(consumable);
                 }
 
-                DisplayConsumableItem();
-            }
-            else
-            {
                 DisplayConsumableItem();
             }
         }
@@ -452,6 +617,29 @@ namespace TextRPG_Team
             Console.WriteLine();
         }
 
+        private static void DisplayShopEquipments(Item curItem)
+        {
+            Equipment equipment = (Equipment)curItem;
+            
+            Console.Write($"{curItem.Name} | ");
+            if (equipment.Atk != 0) Console.Write($" 공격력 +{equipment.Atk} ");
+            if (equipment.Def != 0) Console.Write($" 방어력 +{equipment.Def} ");
+            Console.Write($" | {curItem.Description}"); 
+            if (equipment.IsHave)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write($"판매 금액 : {equipment.SellGold}");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.Write($"구매 금액 : {equipment.SellGold}");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            Console.WriteLine();
+        }
+
         static void DisplayManageEquipment()
         {
             Console.Clear();
@@ -464,17 +652,22 @@ namespace TextRPG_Team
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("[아이템 목록]");
 
-            for (int i = 0; i < inventory.Length; i++)
+            int num = 1;
+            Dictionary<int, int> dic = new Dictionary<int, int>();
+
+            for (int i = 0; i < Items.Length; i++)
             {
-                if (inventory[i] == null)
+                if (Items[i] == null)
                     break;
 
-                Item curItem = inventory[i];
+                Item curItem = Items[i];
 
-                if (curItem.Type == ItemType.Equipment)
+                if (curItem.Type == ItemType.Equipment && curItem.IsHave == true)
                 {
 
-                    Console.Write($"{i + 1} ");
+                    Console.Write($"{num} ");
+                    dic.Add(num, i);
+                    num++;
                     Equipment equipment = (Equipment)curItem;
 
                     if (equipment.IsEquiped)
@@ -495,14 +688,14 @@ namespace TextRPG_Team
             Console.WriteLine();
             Console.WriteLine("0. 나가기");
 
-            int input = CheckValidInput(0, equipmentCount);
+            int input = CheckValidInput(0, dic.Count);
             if (input == 0)
             {
                 DisplayInventory();
             }
             else if (input > 0 && input <= equipmentCount)
             {
-                Item curItem = inventory[input - 1];
+                Item curItem = Items[dic[input]];
 
                 if (curItem.Type == ItemType.Equipment)
                 {
