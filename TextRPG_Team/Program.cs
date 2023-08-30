@@ -146,51 +146,40 @@ namespace TextRPG_Team
         //원래 코드
         static void AddItem(Item item)
         {
-            Items[ItemCount] = item;
-            ++ItemCount;
-            if (item.Type == ItemType.Equipment)
+            if (Items.Length / 2 < ItemCount)
             {
-                ++equipmentCount;
+                ExtendInventory();
             }
-            InvenSort();
+
+            if (Items.Contains(item) && item.Type == ItemType.Consumable)
+            {
+                int index = Array.IndexOf(Items, item);
+                Consumable consumableItem = (Consumable)Items[index];
+                consumableItem.Count += 3;
+                Items[index] = consumableItem;
+            }
+            else
+            {
+                Items[ItemCount] = item;
+                ++ItemCount;
+                if (item.Type == ItemType.Equipment)
+                {
+                    ++equipmentCount;
+                }
+                InvenSort();
+            }
         }
 
-        //static void AddItem(Item item)
-        //{
-        //    if (Item.Length / 2 < ItemCount)
-        //    {
-        //        ExtendInventory();
-        //    }
+        private static void ExtendInventory()
+        {
+            var newInven = new Item[Items.Length * 2];
+            for (int i = 0; i < Items.Length; i++)
+            {
+                newInven[i] = Items[i];
+            }
 
-        //    if (inventory.Contains(item) && item.Type == ItemType.Consumable)
-        //    {
-        //        int index = Array.IndexOf(inventory, item);
-        //        Consumable consumableItem = (Consumable)inventory[index];
-        //        consumableItem.Count += 3;
-        //        inventory[index] = consumableItem;
-        //    }
-        //    else
-        //    {
-        //        inventory[ItemCount] = item;
-        //        ++ItemCount;
-        //        if (item.Type == ItemType.Equipment)
-        //        {
-        //            ++equipmentCount;
-        //        }
-        //        InvenSort();
-        //    }
-        //}
-
-        //private static void ExtendInventory()
-        //{
-        //    var newInven = new Item[inventory.Length * 2];
-        //    for (int i = 0; i < inventory.Length; i++)
-        //    {
-        //        newInven[i] = inventory[i];
-        //    }
-
-        //    inventory = newInven;
-        //}
+            Items = newInven;
+        }
 
         static void EquipItem(Equipment item)
         {
@@ -407,7 +396,7 @@ namespace TextRPG_Team
             Console.WriteLine("[보유 골드]");
             Console.WriteLine($"{player.Gold} G");
             Console.WriteLine();
-            for (int i = 0; i < Items.Length; i++)
+            for (int i = 0; i < ItemCount; i++)
             {
                 Item curItem = Items[i];
 
@@ -458,7 +447,7 @@ namespace TextRPG_Team
             Console.WriteLine("[보유 골드]");
             Console.WriteLine($"{player.Gold} G");
             Console.WriteLine();
-            for (int i = 0; i < Items.Length ; i++)
+            for (int i = 0; i < ItemCount; i++)
             {
                 Item curItem = Items[i];
 
@@ -541,7 +530,7 @@ namespace TextRPG_Team
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("[아이템 목록]");
 
-            for (int i = 0; i < Items.Length; i++)
+            for (int i = 0; i < ItemCount; i++)
             {
                 if (!Items[i].IsHave)
                     continue;
