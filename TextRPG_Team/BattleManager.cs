@@ -7,6 +7,8 @@
         private Monster[] monsters;
         private Character prevPlayer;
         private List<Monster> killedMonster;
+        private List<Monster> aliveMonsters;
+        private CharacterSkills characterSkills = new CharacterSkills();
 
         int criticalPercentage = 15;
         int dodgePercentage = 10;
@@ -19,7 +21,6 @@
             this.monsters = monsters;
             prevPlayer = new Character(player);
             killedMonster = new List<Monster>();
-
             ShuffleMonsters(); // 몬스터 배열
         }
 
@@ -73,6 +74,7 @@
                 newMonstersList.Add(randomMonster);
             }
 
+            aliveMonsters = new List<Monster>(newMonstersList);
             monsters = newMonstersList.ToArray(); // 복제된 몬스터들을 배열로 변환하여 할당
         }
 
@@ -150,7 +152,16 @@
 
             if (skillNum != 0)
             {
-                skill = player.Skills[skillNum - 1];
+                if (player.CurrentMp >= player.Skills[skillNum - 1].Cost)
+                {
+                    skill = player.Skills[skillNum - 1];
+                }
+                else
+                {
+                    skill = null;
+                    Console.WriteLine("마나가 부족해 일반 공격으로 대체합니다.");
+                }
+
             }
 
             if (skill == null || skill.Type == SkillType.SigleTarget)
@@ -175,26 +186,27 @@
             damage = isCritical ? (int)GetCriticalDamage(damage) : damage;
             string damageMessage = isCritical ? $"[데미지 : {damage}] - 치명타 공격!!" : $"[데미지 : {damage}]";
 
-            if (skillNum != 0)
+            Console.WriteLine();
+            Console.WriteLine($"{player.Name}의 공격!");
+
+            if (skill != null)
             {
-                
-                switch (player.Skills[skillNum - 1].Type)
+                int fnialDamage = (int)(damage * skill.DamageMod);
+                damageMessage = isCritical ? $"[데미지 : {fnialDamage}] - 치명타 공격!!" : $"[데미지 : {fnialDamage}]";
+
+                switch (skill.Type)
                 {
                     case SkillType.SigleTarget:
-                        SingleSkill singleSkill = (SingleSkill)player.Skills[skillNum - 1];
-                        singleSkill.UseSkill(monsters[targetIndex], damage);
+                        characterSkills.AttackSigleTarget(monsters[targetIndex], damage, skill.DamageMod);
                         Console.WriteLine($"{monsters[targetIndex].Name}을(를) 맞췄습니다. {damageMessage}");
                         break;
                     case SkillType.MultipleTarget:
-                        List<Skill> skills = new List<Skill>();
-                        skills.Add(new SingleSkill("라이징 샷", "공격력 * 2.25 로 하나의 적을 공격합니다.", 15, 2.25f, null));
-                        SingleSkill single = (SingleSkill)skills[0];
-                        MultipleSkill multiSkill = (MultipleSkill)player.Skills[skillNum - 1];
-
-                        // 출력을 스킬에서 처리
-                        multiSkill.UseSkill(monsters, damageMessage, damage);
+                        // 다중 공격은 출력을 함수에서 처리
+                        characterSkills.AttackMutipleTarget(aliveMonsters, killedMonster, damageMessage, damage, skill.DamageMod, skill.TargetCount);
                         break;
                 }
+
+                player.DecreaseMp(skill.Cost);
             }
             else
             {
@@ -209,15 +221,15 @@
                 }
             }
 
-            Console.WriteLine();
-            Console.WriteLine($"{player.Name}의 공격!");
+            
             
 
-            if (monsters[targetIndex].IsDead)
+            if (skillNum == 0 && monsters[targetIndex].IsDead)
             {
                 Console.WriteLine($"{monsters[targetIndex].Name}");
                 Console.WriteLine("HP 0 -> Dead");
                 killedMonster.Add(monsters[targetIndex]);
+                aliveMonsters.Remove(monsters[targetIndex]);
             }
             Console.WriteLine();
             Console.WriteLine("아무 키를 눌러 계속");

@@ -65,5 +65,10 @@ namespace TextRPG_Team
         {
             CurrentMp = Math.Clamp(CurrentMp + amount, 0, MaxMp);
         }
+
+        public void DecreaseMp(int cost)
+        {
+            CurrentMp = Math.Clamp(CurrentMp - cost, 0, MaxMp);
+        }
     }
 }

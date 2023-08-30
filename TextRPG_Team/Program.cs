@@ -9,6 +9,7 @@ namespace TextRPG_Team
 
         private static Monster[] monsters;
 
+
         private static Item[] inventory;
         private static int ItemCount;
         private static int equipmentCount;
@@ -22,10 +23,6 @@ namespace TextRPG_Team
 
         static void GameDataSetting()
         {
-            CharacterSkills characterSkills = new CharacterSkills();
-
-            
-
             //초기 캐릭터 정보 세팅
             player = new Character("초기값", "초기값", 1, 10, 5, 100, 50, 1500);
 
@@ -45,19 +42,20 @@ namespace TextRPG_Team
 
                 // 스킬 정보 세팅
                 List<Character> charList = new List<Character>(jobs);
-                charList[0].Skills.Add(new SingleSkill("알파 스트라이크", $"공격력 * 2 로 하나의 적을 공격합니다.", 10, 2, characterSkills.AttackSigleTarget));
-                charList[0].Skills.Add(new MultipleSkill("더블 스트라이크", "공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.", 15, 1.5f, characterSkills.AttackMutipleTarget, 2));
+                charList[0].Skills.Add(new Skill("알파 스트라이크", $"공격력 * 2 로 하나의 적을 공격합니다.", SkillType.SigleTarget, 10, 2));
+                charList[0].Skills.Add(new Skill("더블 스트라이크", "공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.", SkillType.MultipleTarget, 15, 1.5f, 2));
 
-                charList[1].Skills.Add(new SingleSkill("라이징 샷", "공격력 * 2.25 로 하나의 적을 공격합니다.", 15, 2.25f, characterSkills.AttackSigleTarget));
-                charList[1].Skills.Add(new MultipleSkill("한 발에 두 놈", "공격력 * 1.75 로 2명의 적을 랜덤으로 공격합니다.", 20, 1.75f, characterSkills.AttackMutipleTarget, 2));
+                charList[1].Skills.Add(new Skill("라이징 샷", "공격력 * 2.25 로 하나의 적을 공격합니다.", SkillType.SigleTarget, 15, 2.25f));
+                charList[1].Skills.Add(new Skill("한 발에 두 놈", "공격력 * 1.75 로 2명의 적을 랜덤으로 공격합니다.", SkillType.MultipleTarget, 20, 1.75f, 2));
 
-                charList[2].Skills.Add(new SingleSkill("파이어 볼", "공격력 * 2 로 하나의 적을 공격합니다.", 20, 2.5f, characterSkills.AttackSigleTarget));
-                charList[2].Skills.Add(new MultipleSkill("메테오", "공격력 * 1.75로 모든 적을 공격합니다.", 25, 2f, characterSkills.AttackMutipleTarget));
+                charList[2].Skills.Add(new Skill("파이어 볼", "공격력 * 2 로 하나의 적을 공격합니다.", SkillType.SigleTarget, 20, 2.5f));
+                charList[2].Skills.Add(new Skill("메테오", "공격력 * 1.75로 모든 적을 공격합니다.", SkillType.MultipleTarget, 25, 2f));
 
-                charList[3].Skills.Add(new SingleSkill("급소 베기", "공격력 * 2로 하나의 적을 공격합니다.", 15, 2f, characterSkills.AttackSigleTarget));
-                charList[3].Skills.Add(new MultipleSkill("암기 던지기", "공격력 * 2로 두 명의 적을 공격합니다.", 20, 2f, characterSkills.AttackMutipleTarget, 2));
+                charList[3].Skills.Add(new Skill("급소 베기", "공격력 * 2로 하나의 적을 공격합니다.", SkillType.SigleTarget, 15, 2f));
+                charList[3].Skills.Add(new Skill("암기 던지기", "공격력 * 2로 두 명의 적을 공격합니다.", SkillType.MultipleTarget, 20, 2f, 2));
 
                 JsonUtility.Save(charList, "characterList");
+
             }
 
             #endregion
@@ -69,6 +67,17 @@ namespace TextRPG_Team
             if (Save_player == null)
             {
                 DisplayCharacterCustom();
+                foreach (var skill in player.Skills)
+                {
+                    switch (skill.Type)
+                    {
+                        case SkillType.SigleTarget:
+
+                            break;
+                        case SkillType.MultipleTarget:
+                            break;
+                    }
+                }
                 JsonUtility.Save(player, "player");
             }
             else
@@ -281,6 +290,7 @@ namespace TextRPG_Team
             Console.WriteLine();
 
             Console.WriteLine($"체력 : {player.CurrentHp}");
+            Console.WriteLine($"마나 : {player.CurrentMp}");
             Console.WriteLine($"Gold : {player.Gold} G");
             Console.WriteLine();
             Console.WriteLine("0. 나가기");
