@@ -96,8 +96,8 @@ namespace TextRPG_Team
 
             monsters = new Monster[]
             {
-                new Monster("Lv.1 미니언", 1, 10, 3, 10, inventory[0]),
-                new Monster("Lv.2 미니언", 2, 15, 5, 20, inventory[1]),
+                new Monster("Lv.1 미니언", 1, 10, 3, 10, new Equipment("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 5)),
+                new Monster("Lv.2 미니언", 2, 15, 5, 20, new Equipment("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", 2, 0)),
                 new Monster("Lv.5 대포미니언", 5, 25, 8, 50, inventory[2]),
                 new Monster("Lv.3 공허충", 3, 10, 9, 30, inventory[3])
             };

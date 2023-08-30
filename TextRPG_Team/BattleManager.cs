@@ -221,9 +221,6 @@
                 }
             }
 
-            
-            
-
             if (skillNum == 0 && monsters[targetIndex].IsDead)
             {
                 Console.WriteLine($"{monsters[targetIndex].Name}");
@@ -244,14 +241,24 @@
             {
                 if (!monster.IsDead)
                 {
-                    int damage = CalculateDamage(monster.Atk);
-                    player.CurrentHp -= damage;
+                    if (IsDodged())
+                    {
+                        Console.WriteLine($"{player.Name}을(를) 공격했지만 아무일도 일어나지 않았습니다.");
+                    }
+                    else
+                    {
+                        int damage = CalculateDamage(monster.Atk);
+                        player.CurrentHp -= damage;
 
-                    Console.WriteLine();
-                    Console.WriteLine($"{monster.Name}의 공격!");
-                    Console.WriteLine($"{player.Name}을(를) 맞췄습니다. [데미지 : {damage}]");
-                    if (player.CurrentHp <= 0)
-                        break;
+                        Console.WriteLine();
+                        Console.WriteLine($"{monster.Name}의 공격!");
+                        Console.WriteLine($"{player.Name}을(를) 맞췄습니다. [데미지 : {damage}]");
+                        if (player.CurrentHp <= 0)
+                            break;
+                    }
+
+
+
                 }
             }
 
