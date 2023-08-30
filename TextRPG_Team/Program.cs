@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace TextRPG_Team
@@ -123,12 +124,14 @@ namespace TextRPG_Team
             AddItem(new Consumable("HP 포션", "체력을 회복해주는 물약입니다.", player.HealHP, 30, 3, true, 200, 100));
             AddItem(new Consumable("MP 포션", "마나를 회복해주는 물약입니다.", player.HealMP, 30, 3, true, 200, 100));
 
+
+
             monsters = new Monster[]
             {
-                new Monster("Lv.1 미니언", 1, 10, 3, 10, Items[0]),
-                new Monster("Lv.2 미니언", 2, 15, 5, 20, Items[1]),
-                new Monster("Lv.5 대포미니언", 5, 25, 8, 50, Items[2]),
-                new Monster("Lv.3 공허충", 3, 10, 9, 30, Items[3])
+                new Monster("Lv.1 미니언", 1, 10, 3, 10,  Items[8]),
+                new Monster("Lv.2 미니언", 2, 15, 5, 20, Items[9]),
+                new Monster("Lv.5 대포미니언", 5, 25, 8, 50, Items[8]),
+                new Monster("Lv.3 공허충", 3, 10, 9, 30, Items[9])
             };
         
         }
@@ -155,7 +158,7 @@ namespace TextRPG_Team
             {
                 int index = Array.IndexOf(Items, item);
                 Consumable consumableItem = (Consumable)Items[index];
-                consumableItem.Count += 3;
+                consumableItem.Count += 1;
                 Items[index] = consumableItem;
             }
             else
@@ -618,8 +621,6 @@ namespace TextRPG_Team
             Console.WriteLine();
             Console.WriteLine("0. 나가기");
 
-            int consumableStartIdx = ItemCount == equipmentCount ? 0 : ItemCount - equipmentCount + 1;
-            int consumableLength = ItemCount == equipmentCount ? 0 : ItemCount;
             int input = CheckValidInput(0, dic.Count);
             if (input == 0)
             {
