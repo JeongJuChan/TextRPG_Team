@@ -1,6 +1,4 @@
-﻿using System.Net.NetworkInformation;
-
-namespace TextRPG_Team
+﻿namespace TextRPG_Team
 {
     public class BattleManager
     {
@@ -9,6 +7,10 @@ namespace TextRPG_Team
         private Monster[] monsters;
         private Character prevPlayer;
         private List<Monster> killedMonster;
+
+        int criticalPercentage = 15;
+        int dodgePercentage = 10;
+        float criticalMod = 1.6f;
 
         //생성자
         public BattleManager(Character player, Monster[] monsters, Item[] inventory)
@@ -34,21 +36,24 @@ namespace TextRPG_Team
                 else
                 {
                     DisplayBattleScreen(false); //전투 화면 표시
-                    int input = Program.CheckValidInput(0, 1);
+                    int input = Program.CheckValidInput(0, 2);
                     switch (input)
                     {
                         case 0:
                             DisplayerResult();
                             Program.DisplayGameIntro();
                             break;
-
                         case 1:
                             DisplayBattleScreen(true);
+                            PlayerTurn();
+                            break;
+                        case 2:
+                            DisplayBattleScreen(true, true);
                             break;
                     }
 
-                    PlayerTurn();
                     MonsterTurn();
+
                 }
             }
 
@@ -72,7 +77,7 @@ namespace TextRPG_Team
         }
 
         //전투 시작화면
-        public void DisplayBattleScreen(bool showMonsterNumbers)
+        public void DisplayBattleScreen(bool showMonsterNumbers, bool isSkillPase = false)
         {
             Console.Clear();
             WriteColored("Battle!!", ConsoleColor.Yellow);
@@ -103,35 +108,111 @@ namespace TextRPG_Team
             Console.WriteLine("[내정보]");
             Console.WriteLine($"{player.Name} (Lv.{player.Level})");
             Console.WriteLine($"HP {player.CurrentHp}/{player.MaxHp}");
+            Console.WriteLine($"MP {player.CurrentMp}/{player.MaxMp}");
             Console.WriteLine();
-            Console.WriteLine("0. 나가기");
-            Console.WriteLine("1. 공격");
+
+            if (isSkillPase)
+            {
+                for (int i = 0; i < player.Skills.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {player.Skills[i].Name} - MP {player.Skills[i].Cost}");
+                    Console.WriteLine(player.Skills[i].Description);
+                }
+                Console.WriteLine("0. 취소");
+
+                int input = Program.CheckValidInput(0, player.Skills.Count);
+
+                if (input == 0)
+                {
+                    DisplayBattleScreen(showMonsterNumbers);
+                }
+                else
+                {
+                    PlayerTurn(input);
+                }
+            }
+            else
+            {
+                Console.WriteLine("0. 나가기");
+                Console.WriteLine("1. 공격");
+                Console.WriteLine("2. 스킬");
+            }
             Console.WriteLine();
             Console.WriteLine("원하시는 행동을 입력해주세요.");
             Console.Write(">> ");
         }
 
         //플레이어 턴 동작 로직
-        void PlayerTurn()
+        void PlayerTurn(int skillNum = 0)
         {
-            Console.WriteLine();
-            Console.WriteLine("대상을 선택해주세요.");
-            Console.Write(">> ");
-            int targetIndex = Program.CheckValidInput(1, monsters.Length) - 1;
+            Skill skill = null;
+            int targetIndex = -1;
 
-            if (monsters[targetIndex].IsDead)
+            if (skillNum != 0)
             {
-                Program.DisplayError("잘못된 입력입니다.");
-                PlayerTurn();
-                return;
+                skill = player.Skills[skillNum - 1];
+            }
+
+            if (skill == null || skill.Type == SkillType.SigleTarget)
+            {
+                Console.WriteLine();
+                Console.WriteLine("대상을 선택해주세요.");
+                Console.Write(">> ");
+                targetIndex = Program.CheckValidInput(1, monsters.Length) - 1;
+
+                if (monsters[targetIndex].IsDead)
+                {
+                    Program.DisplayError("잘못된 입력입니다.");
+                    PlayerTurn(skillNum);
+                    return;
+                }
             }
 
             int damage = CalculateDamage(player.Atk + Program.GetItemAtkAmount()); //아이템 추가 공격력 반영
-            monsters[targetIndex].CurrentHp -= damage;
+
+            // 크리티컬 데미지
+            bool isCritical = IsCritical();
+            damage = isCritical ? (int)GetCriticalDamage(damage) : damage;
+            string damageMessage = isCritical ? $"[데미지 : {damage}] - 치명타 공격!!" : $"[데미지 : {damage}]";
+
+            if (skillNum != 0)
+            {
+                
+                switch (player.Skills[skillNum - 1].Type)
+                {
+                    case SkillType.SigleTarget:
+                        SingleSkill singleSkill = (SingleSkill)player.Skills[skillNum - 1];
+                        singleSkill.UseSkill(monsters[targetIndex], damage);
+                        Console.WriteLine($"{monsters[targetIndex].Name}을(를) 맞췄습니다. {damageMessage}");
+                        break;
+                    case SkillType.MultipleTarget:
+                        List<Skill> skills = new List<Skill>();
+                        skills.Add(new SingleSkill("라이징 샷", "공격력 * 2.25 로 하나의 적을 공격합니다.", 15, 2.25f, null));
+                        SingleSkill single = (SingleSkill)skills[0];
+                        MultipleSkill multiSkill = (MultipleSkill)player.Skills[skillNum - 1];
+
+                        // 출력을 스킬에서 처리
+                        multiSkill.UseSkill(monsters, damageMessage, damage);
+                        break;
+                }
+            }
+            else
+            {
+                if (IsDodged())
+                {
+                    Console.WriteLine($"{monsters[targetIndex].Name}을(를) 공격했지만 아무일도 일어나지 않았습니다.");
+                }
+                else
+                {
+                    Console.WriteLine($"{monsters[targetIndex].Name}을(를) 맞췄습니다. {damageMessage}");
+                    monsters[targetIndex].CurrentHp -= damage;
+                }
+            }
 
             Console.WriteLine();
             Console.WriteLine($"{player.Name}의 공격!");
-            Console.WriteLine($"{monsters[targetIndex].Name}을(를) 맞췄습니다. [데미지 : {damage}]");
+            
+
             if (monsters[targetIndex].IsDead)
             {
                 Console.WriteLine($"{monsters[targetIndex].Name}");
@@ -284,6 +365,41 @@ namespace TextRPG_Team
             Console.Write(text);
             Console.ForegroundColor = originalColor;
         }
+
+        #region 크리티컬, 회피 - 주찬
+
+        bool IsCritical()
+        {
+            int randomPercentage = Utility.rand.Next(0, 100);
+            if (randomPercentage < criticalPercentage)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        float GetCriticalDamage(float damage)
+        {
+            return damage * criticalMod;
+        }
+
+        bool IsDodged()
+        {
+            int randomPercentage = Utility.rand.Next(0, 100);
+            if (randomPercentage < dodgePercentage)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        #endregion
     }
 }
 

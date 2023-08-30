@@ -1,23 +1,27 @@
-﻿namespace TextRPG_Team
+﻿using System;
+
+namespace TextRPG_Team
 {
     public class CharacterSkills
     {
-        public void AttackSigleTarget(string target, float damage, float damageMod)
+        public void AttackSigleTarget(Monster target, float damage, float damageMod)
         {
             damage *= damageMod;
-            //target.TakeDamage(damage);
+            target.CurrentHp -= (int)damage;
         }
 
-        public void AttackMutipleTarget(List<string> targets, float damage, float damageMod, int targetCount = 2)
+        public void AttackMutipleTarget(Monster[] targets, string damageMessage, float damage, float damageMod, int targetCount = 2)
         {
-            List<string> newTarget = new List<string>(targets);
+            List<Monster> newTargets = new List<Monster>(targets);
+            targetCount = targets.Length < targetCount ? targets.Length : targetCount;
             damage *= damageMod;
             int count = 0;
-            while (count < newTarget.Count)
+            while (count < targetCount)
             {
                 int index = Utility.rand.Next(0, count);
-                //targets[index].TakeDamage(damage);
-                newTarget.Remove(newTarget[index]);
+                targets[index].CurrentHp -= (int)damage;
+                newTargets.Remove(newTargets[index]);
+                Console.WriteLine($"{targets[index].Name}을(를) 맞췄습니다. {damageMessage}");
                 count++;
             }
         }

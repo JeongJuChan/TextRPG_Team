@@ -6,49 +6,45 @@
         MultipleTarget
     }
 
-    public class SigleSkill : Skill
+    public class SingleSkill : Skill
     {
-        Action<string, float, float> skill;
+        public Action<Monster, float, float> SingleAction { get; }
 
-        public SigleSkill(string name, string description, int cost, float damage, float damageMod, Action<string, float, float> skillAction) : base(name, description, SkillType.SigleTarget, cost, damage, damageMod)
+        public SingleSkill(string name, string description, int cost, float damageMod, Action<Monster, float, float> singleAction) 
+            : base(name, description, SkillType.SigleTarget, cost, damageMod)
         {
-            skill = skillAction;
+            SingleAction = singleAction;
         }
 
-        public void UseSkill(string target)
+        public void UseSkill(Monster target, int damage)
         {
-            skill?.Invoke(target, Damage, DamageMod);
+            SingleAction?.Invoke(target, damage, DamageMod);
         }
     }
 
     public class MultipleSkill : Skill
     {
-        Action<List<string>, float, float, int> mutipleSkill;
+        public int TargetCount { get; }
+        public Action<Monster[], string, float, float, int> MultipleAction { get; }
 
-        public MultipleSkill(string name, string description, int cost, float damage, float damageMod, Action<List<string>, float, float, int> mutipleSkill) : base(name, description, SkillType.SigleTarget, cost, damage, damageMod)
+        public MultipleSkill(string name, string description, int cost, float damageMod, Action<Monster[], string, float, float, int> multipleAction, int targetCount = int.MaxValue) 
+            : base(name, description, SkillType.MultipleTarget, cost, damageMod)
         {
-            this.mutipleSkill = mutipleSkill;
+            TargetCount = targetCount;
+            MultipleAction = multipleAction;
         }
 
-        public void UseSkill(List<string> targets, int targetCount = 2)
+        public void UseSkill(Monster[] targets, string damageMessage, int damage)
         {
-            mutipleSkill?.Invoke(targets, Damage, DamageMod, targetCount);
+            MultipleAction?.Invoke(targets, damageMessage, damage, DamageMod, TargetCount);
         }
     }
 
     public class Skill
     {
-        // 정보 MP 추가
-        // 캐릭터에서 가져오기
-        // 2. 스킬 항목 추가
-        
-        // TODO :
-        // Program에 있는 배틀 로직 배틀 쪽에 붙이기
-
         public string Name { get; }
         public SkillType Type { get; }
         public int Cost { get; }
-        public float Damage { get; }
         public float DamageMod { get; }
         public string Description { get; }
 
@@ -56,11 +52,11 @@
         
         // 배틀 시스템 들어갔을 때 type에 따라 캐스팅하여 UseSkill 호출하면 됨
 
-        public Skill(string name, string description, SkillType type, int cost, float damage, float damageMod)
+        public Skill(string name, string description, SkillType type, int cost, float damageMod)
         {
             Name = name;
             Cost = cost;
-            Damage = damage;
+            Type = type;
             DamageMod = damageMod;
             Description = description;
         }

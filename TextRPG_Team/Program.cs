@@ -24,6 +24,8 @@ namespace TextRPG_Team
         {
             CharacterSkills characterSkills = new CharacterSkills();
 
+            
+
             //초기 캐릭터 정보 세팅
             player = new Character("초기값", "초기값", 1, 10, 5, 100, 50, 1500);
 
@@ -43,17 +45,17 @@ namespace TextRPG_Team
 
                 // 스킬 정보 세팅
                 List<Character> charList = new List<Character>(jobs);
-                charList[0].Skills.Add(new SigleSkill("알파 스트라이크", $"공격력 * 2 로 하나의 적을 공격합니다.", 10, player.Atk, 2, characterSkills.AttackSigleTarget));
-                charList[0].Skills.Add(new MultipleSkill("더블 스트라이크", "공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.", 15, player.Atk, 1.5f, characterSkills.AttackMutipleTarget));
+                charList[0].Skills.Add(new SingleSkill("알파 스트라이크", $"공격력 * 2 로 하나의 적을 공격합니다.", 10, 2, characterSkills.AttackSigleTarget));
+                charList[0].Skills.Add(new MultipleSkill("더블 스트라이크", "공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.", 15, 1.5f, characterSkills.AttackMutipleTarget, 2));
 
-                charList[1].Skills.Add(new SigleSkill("라이징 샷", "공격력 * 2.25 로 하나의 적을 공격합니다.", 15, player.Atk, 2.25f, characterSkills.AttackSigleTarget));
-                charList[1].Skills.Add(new MultipleSkill("한 발에 두 놈", "공격력 * 1.75 로 2명의 적을 랜덤으로 공격합니다.", 20, player.Atk, 1.75f, characterSkills.AttackMutipleTarget));
+                charList[1].Skills.Add(new SingleSkill("라이징 샷", "공격력 * 2.25 로 하나의 적을 공격합니다.", 15, 2.25f, characterSkills.AttackSigleTarget));
+                charList[1].Skills.Add(new MultipleSkill("한 발에 두 놈", "공격력 * 1.75 로 2명의 적을 랜덤으로 공격합니다.", 20, 1.75f, characterSkills.AttackMutipleTarget, 2));
 
-                charList[2].Skills.Add(new SigleSkill("파이어 볼", "공격력 * 2 로 하나의 적을 공격합니다.", 20, player.Atk, 2.5f, characterSkills.AttackSigleTarget));
-                charList[2].Skills.Add(new MultipleSkill("메테오", "공격력 * 1.75로 모든 적을 공격합니다.", 25, player.Atk, 2f, characterSkills.AttackMutipleTarget));
+                charList[2].Skills.Add(new SingleSkill("파이어 볼", "공격력 * 2 로 하나의 적을 공격합니다.", 20, 2.5f, characterSkills.AttackSigleTarget));
+                charList[2].Skills.Add(new MultipleSkill("메테오", "공격력 * 1.75로 모든 적을 공격합니다.", 25, 2f, characterSkills.AttackMutipleTarget));
 
-                charList[3].Skills.Add(new SigleSkill("급소 베기", "공격력 * 2로 하나의 적을 공격합니다.", 15, player.Atk, 2f, characterSkills.AttackSigleTarget));
-                charList[3].Skills.Add(new MultipleSkill("암기 던지기", "공격력 * 2로 두 명의 적을 공격합니다.", 20, player.Atk, 2f, characterSkills.AttackMutipleTarget));
+                charList[3].Skills.Add(new SingleSkill("급소 베기", "공격력 * 2로 하나의 적을 공격합니다.", 15, 2f, characterSkills.AttackSigleTarget));
+                charList[3].Skills.Add(new MultipleSkill("암기 던지기", "공격력 * 2로 두 명의 적을 공격합니다.", 20, 2f, characterSkills.AttackMutipleTarget, 2));
 
                 JsonUtility.Save(charList, "characterList");
             }
@@ -555,59 +557,7 @@ namespace TextRPG_Team
 
         #endregion
 
-        #region 배틀구현 이후 추가할 메서드들 - 주찬
-
-        int criticalPercentage = 15;
-        int dodgePercentage = 10;
-        float criticalMod = 1.6f;
-
-        void DummyBattleLogic()
-        {
-            // 크리티컬 데미지
-            float damage = 0;
-            damage = IsCritical() ? GetCriticalDamage(damage) : damage;
-
-            // 피하기 로직
-            string attackSentence = "~을";
-            attackSentence += IsDodged() ? GetDodgeSentence() : "";
-        }
-
-        bool IsCritical()
-        {
-            int randomPercentage = Utility.rand.Next(0, 100);
-            if (randomPercentage < criticalPercentage)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        float GetCriticalDamage(float damage)
-        {
-            return damage * criticalMod;
-        }
-
-        bool IsDodged()
-        {
-            int randomPercentage = Utility.rand.Next(0, 100);
-            if (randomPercentage < dodgePercentage)
-            {
-                return true;
-            }
-            else 
-            { 
-                return false; 
-            }
-        }
-
-        public string GetDodgeSentence()
-        {
-            return "공격했지만 아무일도 일어나지 않았습니다.";
-        }
-        #endregion
+       
     }
 }
     
