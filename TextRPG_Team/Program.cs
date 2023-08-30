@@ -165,6 +165,7 @@ namespace TextRPG_Team
         {
             item.Consume();
             item.Count--;
+            Console.WriteLine("회복을 완료했습니다.");
 
             if (item.Count == 0)
             {
