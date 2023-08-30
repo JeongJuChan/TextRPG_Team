@@ -9,6 +9,7 @@ namespace TextRPG_Team
 
         private static Monster[] monsters;
 
+
         private static Item[] inventory;
         private static int ItemCount;
         private static int equipmentCount;
@@ -22,8 +23,6 @@ namespace TextRPG_Team
 
         static void GameDataSetting()
         {
-            CharacterSkills characterSkills = new CharacterSkills();
-
             //초기 캐릭터 정보 세팅
             player = new Character("초기값", "초기값", 1, 10, 5, 100, 50, 1500);
 
@@ -43,19 +42,20 @@ namespace TextRPG_Team
 
                 // 스킬 정보 세팅
                 List<Character> charList = new List<Character>(jobs);
-                charList[0].Skills.Add(new SigleSkill("알파 스트라이크", $"공격력 * 2 로 하나의 적을 공격합니다.", 10, player.Atk, 2, characterSkills.AttackSigleTarget));
-                charList[0].Skills.Add(new MultipleSkill("더블 스트라이크", "공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.", 15, player.Atk, 1.5f, characterSkills.AttackMutipleTarget));
+                charList[0].Skills.Add(new Skill("알파 스트라이크", $"공격력 * 2 로 하나의 적을 공격합니다.", SkillType.SigleTarget, 10, 2));
+                charList[0].Skills.Add(new Skill("더블 스트라이크", "공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.", SkillType.MultipleTarget, 15, 1.5f, 2));
 
-                charList[1].Skills.Add(new SigleSkill("라이징 샷", "공격력 * 2.25 로 하나의 적을 공격합니다.", 15, player.Atk, 2.25f, characterSkills.AttackSigleTarget));
-                charList[1].Skills.Add(new MultipleSkill("한 발에 두 놈", "공격력 * 1.75 로 2명의 적을 랜덤으로 공격합니다.", 20, player.Atk, 1.75f, characterSkills.AttackMutipleTarget));
+                charList[1].Skills.Add(new Skill("라이징 샷", "공격력 * 2.25 로 하나의 적을 공격합니다.", SkillType.SigleTarget, 15, 2.25f));
+                charList[1].Skills.Add(new Skill("한 발에 두 놈", "공격력 * 1.75 로 2명의 적을 랜덤으로 공격합니다.", SkillType.MultipleTarget, 20, 1.75f, 2));
 
-                charList[2].Skills.Add(new SigleSkill("파이어 볼", "공격력 * 2 로 하나의 적을 공격합니다.", 20, player.Atk, 2.5f, characterSkills.AttackSigleTarget));
-                charList[2].Skills.Add(new MultipleSkill("메테오", "공격력 * 1.75로 모든 적을 공격합니다.", 25, player.Atk, 2f, characterSkills.AttackMutipleTarget));
+                charList[2].Skills.Add(new Skill("파이어 볼", "공격력 * 2 로 하나의 적을 공격합니다.", SkillType.SigleTarget, 20, 2.5f));
+                charList[2].Skills.Add(new Skill("메테오", "공격력 * 1.75로 모든 적을 공격합니다.", SkillType.MultipleTarget, 25, 2f));
 
-                charList[3].Skills.Add(new SigleSkill("급소 베기", "공격력 * 2로 하나의 적을 공격합니다.", 15, player.Atk, 2f, characterSkills.AttackSigleTarget));
-                charList[3].Skills.Add(new MultipleSkill("암기 던지기", "공격력 * 2로 두 명의 적을 공격합니다.", 20, player.Atk, 2f, characterSkills.AttackMutipleTarget));
+                charList[3].Skills.Add(new Skill("급소 베기", "공격력 * 2로 하나의 적을 공격합니다.", SkillType.SigleTarget, 15, 2f));
+                charList[3].Skills.Add(new Skill("암기 던지기", "공격력 * 2로 두 명의 적을 공격합니다.", SkillType.MultipleTarget, 20, 2f, 2));
 
                 JsonUtility.Save(charList, "characterList");
+
             }
 
             #endregion
@@ -67,6 +67,17 @@ namespace TextRPG_Team
             if (Save_player == null)
             {
                 DisplayCharacterCustom();
+                foreach (var skill in player.Skills)
+                {
+                    switch (skill.Type)
+                    {
+                        case SkillType.SigleTarget:
+
+                            break;
+                        case SkillType.MultipleTarget:
+                            break;
+                    }
+                }
                 JsonUtility.Save(player, "player");
             }
             else
@@ -85,8 +96,8 @@ namespace TextRPG_Team
 
             monsters = new Monster[]
             {
-                new Monster("Lv.1 미니언", 1, 10, 3, 10, inventory[0]),
-                new Monster("Lv.2 미니언", 2, 15, 5, 20, inventory[1]),
+                new Monster("Lv.1 미니언", 1, 10, 3, 10, new Equipment("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 5)),
+                new Monster("Lv.2 미니언", 2, 15, 5, 20, new Equipment("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", 2, 0)),
                 new Monster("Lv.5 대포미니언", 5, 25, 8, 50, inventory[2]),
                 new Monster("Lv.3 공허충", 3, 10, 9, 30, inventory[3])
             };
@@ -105,13 +116,39 @@ namespace TextRPG_Team
 
         static void AddItem(Item item)
         {
-            inventory[ItemCount] = item;
-            ++ItemCount;
-            if (item.Type == ItemType.Equipment)
+            if (inventory.Length / 2 < ItemCount)
             {
-                ++equipmentCount;
+                ExtendInventory();
             }
-            InvenSort();
+
+            if (inventory.Contains(item) && item.Type == ItemType.Consumable)
+            {
+                int index = Array.IndexOf(inventory, item);
+                Consumable consumableItem = (Consumable)inventory[index];
+                consumableItem.Count += 3;
+                inventory[index] = consumableItem;
+            }
+            else
+            {
+                inventory[ItemCount] = item;
+                ++ItemCount;
+                if (item.Type == ItemType.Equipment)
+                {
+                    ++equipmentCount;
+                }
+                InvenSort();
+            }
+        }
+
+        private static void ExtendInventory()
+        {
+            var newInven = new Item[inventory.Length * 2];
+            for (int i = 0; i < inventory.Length; i++)
+            {
+                newInven[i] = inventory[i];
+            }
+
+            inventory = newInven;
         }
 
         static void EquipItem(Equipment item)
@@ -279,6 +316,7 @@ namespace TextRPG_Team
             Console.WriteLine();
 
             Console.WriteLine($"체력 : {player.CurrentHp}");
+            Console.WriteLine($"마나 : {player.CurrentMp}");
             Console.WriteLine($"Gold : {player.Gold} G");
             Console.WriteLine();
             Console.WriteLine("0. 나가기");
@@ -555,59 +593,7 @@ namespace TextRPG_Team
 
         #endregion
 
-        #region 배틀구현 이후 추가할 메서드들 - 주찬
-
-        int criticalPercentage = 15;
-        int dodgePercentage = 10;
-        float criticalMod = 1.6f;
-
-        void DummyBattleLogic()
-        {
-            // 크리티컬 데미지
-            float damage = 0;
-            damage = IsCritical() ? GetCriticalDamage(damage) : damage;
-
-            // 피하기 로직
-            string attackSentence = "~을";
-            attackSentence += IsDodged() ? GetDodgeSentence() : "";
-        }
-
-        bool IsCritical()
-        {
-            int randomPercentage = Utility.rand.Next(0, 100);
-            if (randomPercentage < criticalPercentage)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        float GetCriticalDamage(float damage)
-        {
-            return damage * criticalMod;
-        }
-
-        bool IsDodged()
-        {
-            int randomPercentage = Utility.rand.Next(0, 100);
-            if (randomPercentage < dodgePercentage)
-            {
-                return true;
-            }
-            else 
-            { 
-                return false; 
-            }
-        }
-
-        public string GetDodgeSentence()
-        {
-            return "공격했지만 아무일도 일어나지 않았습니다.";
-        }
-        #endregion
+       
     }
 }
     
