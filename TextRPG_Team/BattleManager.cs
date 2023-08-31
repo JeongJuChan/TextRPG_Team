@@ -305,8 +305,9 @@
         {
             Console.Clear();
 
+            // TODO : json파일이 존재하지 않음.
             // 경험치 및 드랍 테이블 작성
-            List<Table.ExpTable>? expTable = JsonUtility.Load<List<Table.ExpTable>>("ExpTable");
+            //List<Table.ExpTable>? expTable = JsonUtility.Load<List<Table.ExpTable>>("ExpTable");
 
             foreach (var monster in killedMonster)
             {
@@ -314,11 +315,11 @@
                 player.Gold += monster.Gold;
             }
 
-            foreach (var exp in expTable)
-            {
-                if ((exp.id == player.Level) && (player.CurrentExp >= (exp.NeedEXP + exp.StackEXP)))
-                    player.Level += 1;
-            }
+            //foreach (var exp in expTable)
+            //{
+            //    if ((exp.id == player.Level) && (player.CurrentExp >= (exp.NeedEXP + exp.StackEXP)))
+            //        player.Level += 1;
+            //}
 
             WriteColored("Battle!! - Result", ConsoleColor.Yellow);
             Console.WriteLine();
@@ -361,9 +362,12 @@
 
                 Console.WriteLine("[획득 아이템]");
                 Console.WriteLine($"{dropGold} Gold");
-                foreach (var item in drops)
+                if (drops.Count != 0)
                 {
-                    Console.WriteLine($"{item.Name} - {drops.Count(x => { return x.Name == item.Name; })}");
+                    foreach (var item in drops)
+                    {
+                        Console.WriteLine($"{item.Name} - {drops.Count(x => { return x.Name == item.Name; })}");
+                    }
                 }
                 Console.WriteLine();
 

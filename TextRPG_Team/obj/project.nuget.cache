@@ -1,8 +1,14 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "lemiNyNFy9X0biHwC58iC67OvTIrPQkdJBSRTl5zt/4lN7dJ61VrMNUSwxmpquxcG96G3NbxGvQOLUTSlDfPBQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Administrator\\source\\repos\\TextRPG_Team\\TextRPG_Team\\TextRPG_Team.csproj",
+=======
+  "dgSpecHash": "HvsFUgWzLdedYaY22acqDYWXNZyU0KF/OM8uaZYKa8tDbY+rMKB44ab3d5tmDTSfBsqNgrWsW2c8nyM6wkCMPA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\dudrh\\Desktop\\TextRPG_TEAM\\TextRPG_Team\\TextRPG_Team.csproj",
+>>>>>>> main
   "expectedPackageFiles": [],
   "logs": []
 }
