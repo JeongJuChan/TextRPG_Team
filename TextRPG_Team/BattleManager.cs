@@ -14,6 +14,8 @@
         int dodgePercentage = 10;
         float criticalMod = 1.6f;
 
+        private int currentStage = 1;
+
         //생성자
         public BattleManager(Character player, Monster[] monsters, Item[] inventory)
         {
@@ -32,11 +34,29 @@
                 if (CheckBattleEnd())
                 {
                     DisplayerResult();
-                    Program.DisplayGameIntro();
+                    Console.Clear();
+                    Console.WriteLine("1. 다음 스테이지로 이동");
+                    Console.WriteLine("2. 메인 화면으로 돌아가기");
+                    Console.WriteLine();
+                    Console.WriteLine("원하시는 행동을 입력하세요");
+                    Console.Write(">> ");
+
+                    int input = Program.CheckValidInput(1, 2);
+
+                    if (input == 1)
+                    {
+                        currentStage++;
+                        killedMonster.Clear(); // 이전 스테이지에서 잡은 몬스터 초기화
+                        ShuffleMonsters();
+                    }
+                    else
+                    {
+                        Program.DisplayGameIntro();
+                    }
                 }
                 else
                 {
-                    DisplayBattleScreen(false); //전투 화면 표시
+                    DisplayBattleScreen(false);
                     int input = Program.CheckValidInput(0, 2);
                     switch (input)
                     {
@@ -55,6 +75,7 @@
 
                     MonsterTurn();
 
+                    
                 }
             }
 
