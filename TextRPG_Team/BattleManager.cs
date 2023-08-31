@@ -1,4 +1,6 @@
-﻿namespace TextRPG_Team
+﻿using TextRPG_Team.TextRPG_Team;
+
+namespace TextRPG_Team
 {
     public class BattleManager
     {
@@ -15,12 +17,15 @@
         float criticalMod = 1.6f;
 
         private int currentStage = 1;
+        private StageProgress stageProgress;
 
         //생성자
-        public BattleManager(Character player, Monster[] monsters, Item[] inventory)
+        public BattleManager(Character player, Monster[] monsters, Item[] inventory, StageProgress stageProgress)
         {
             this.player = prevPlayer = player;
             this.monsters = monsters;
+            this.stageProgress = stageProgress;
+
             prevPlayer = new Character(player);
             killedMonster = new List<Monster>();
             ShuffleMonsters(); // 몬스터 배열
@@ -29,29 +34,52 @@
         //전투 시작과 진행
         public void StartBattle(Character player)
         {
+            currentStage = stageProgress.CurrentStage;
+
             while (true)
             {
                 if (CheckBattleEnd())
                 {
                     DisplayerResult();
-                    Console.Clear();
-                    Console.WriteLine("1. 다음 스테이지로 이동");
-                    Console.WriteLine("2. 메인 화면으로 돌아가기");
-                    Console.WriteLine();
-                    Console.WriteLine("원하시는 행동을 입력하세요");
-                    Console.Write(">> ");
-
-                    int input = Program.CheckValidInput(1, 2);
-
-                    if (input == 1)
+                    if (player.CurrentHp <= 0)
                     {
-                        currentStage++;
-                        killedMonster.Clear(); // 이전 스테이지에서 잡은 몬스터 초기화
-                        ShuffleMonsters();
+                        Console.WriteLine();
+                        Console.WriteLine("1. 메인 화면으로 돌아가기");
+                        Console.WriteLine();
+                        Console.WriteLine("원하시는 행동을 입력하세요");
+                        Console.Write(">> ");
+
+                        int input = Program.CheckValidInput(1, 1);
+
+                        if (input == 1)
+                        {
+                            Program.DisplayGameIntro();
+                        }
                     }
                     else
                     {
-                        Program.DisplayGameIntro();
+                        Console.WriteLine();
+                        Console.WriteLine("1. 다음 스테이지로 이동");
+                        Console.WriteLine("2. 메인 화면으로 돌아가기");
+                        Console.WriteLine();
+                        Console.WriteLine("원하시는 행동을 입력하세요");
+                        Console.Write(">> ");
+
+                        int input = Program.CheckValidInput(1, 2);
+
+                        if (input == 1)
+                        {
+                            currentStage++;
+                            stageProgress.CurrentStage = currentStage; // 스테이지 진행상황 업데이트
+                            stageProgress.Save();
+
+                            killedMonster.Clear(); // 이전 스테이지에서 잡은 몬스터 초기화
+                            ShuffleMonsters();
+                        }
+                        else
+                        {
+                            Program.DisplayGameIntro();
+                        }
                     }
                 }
                 else
@@ -85,7 +113,12 @@
         //몬스터 랜덤 출현
         public void ShuffleMonsters()
         {
-            int numberOfMonsters = Random.Next(1, 5); // 1부터 4까지 랜덤한 숫자
+            currentStage = stageProgress.CurrentStage;
+
+            int minMonsters = 1;
+            int maxMonsters = currentStage + 1; // 스테이지마다 최대 몬스터수 증가
+            int numberOfMonsters = Random.Next(minMonsters, maxMonsters);
+
             List<Monster> newMonstersList = new List<Monster>();
 
             for (int i = 0; i < numberOfMonsters; i++)
@@ -349,7 +382,7 @@
             Console.WriteLine(resultHeader);
             Console.WriteLine();
 
-            Console.WriteLine($"던전에서 몬스터 {killedMonster.Count}마리를 잡았습니다.");
+            Console.WriteLine($"스테이지{currentStage}에서 몬스터 {killedMonster.Count}마리를 잡았습니다.");
             Console.WriteLine();
 
             string[] prefix = new string[3];

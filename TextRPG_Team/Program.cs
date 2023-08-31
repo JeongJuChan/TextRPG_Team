@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TextRPG_Team.TextRPG_Team;
 
 namespace TextRPG_Team
 {
@@ -13,6 +14,8 @@ namespace TextRPG_Team
         private static Item[] Items;
         private static int ItemCount;
         private static int equipmentCount;
+
+        private static StageProgress stageProgress;
 
 
         static void Main(string[] args)
@@ -296,6 +299,8 @@ namespace TextRPG_Team
 
         public static void DisplayGameIntro()
         {
+            StageProgress stageProgress = StageProgress.Load();
+
             Console.Clear();
 
             Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.");
@@ -304,11 +309,11 @@ namespace TextRPG_Team
             Console.WriteLine("1. 상태보기");
             Console.WriteLine("2. 인벤토리");
             Console.WriteLine("3. 상점");
-            Console.WriteLine("4. 전투");
+            Console.WriteLine($"4. 전투(현재 스테이지: {stageProgress.CurrentStage})");
             Console.WriteLine();
             Console.WriteLine("원하시는 행동을 입력해주세요.");
 
-            BattleManager battle = new BattleManager(player, monsters, Items);
+            BattleManager battle = new BattleManager(player, monsters, Items, stageProgress);
 
             int input = CheckValidInput(1, 4);
             switch (input)
