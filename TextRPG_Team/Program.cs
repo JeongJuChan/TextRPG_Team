@@ -13,6 +13,10 @@ namespace TextRPG_Team
         private static int ItemCount;
         private static int equipmentCount;
 
+        // 1. Item을 상속받는 Equipment와 Consumable이 있고 이미 Item배열인 Items가 있는 현재 구조에서
+        //    Equipment 배열과 Consumable 배열을 만들어 json으로 따로 관리하려 했으나 낭비라고 생각이 듬
+        // 2. 그래서 둘의 데이터는 같이 관리하되 장착했는지 여부와 몇 개인지는 Item에 통합하여 관리하도록 함 (사용자 데이터 관련한 부분들만)
+
 
         static void Main(string[] args)
         {
@@ -57,6 +61,7 @@ namespace TextRPG_Team
 
             }
 
+
             #endregion
 
             //캐릭터 데이터 불러오기
@@ -87,41 +92,56 @@ namespace TextRPG_Team
             // 인벤토리 생성
             Items = new Item[10];
 
-            // 아이템 추가
-            AddItem(new Equipment("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 5, true, 500, 300));
-            AddItem(new Equipment("수련자 갑옷", "수련에 도움을 주는 갑옷입니다.", 0, 9, false, 1500, 1000));
-            AddItem(new Equipment("황금 갑옷", "황금으로 만들어져 튼튼한 갑옷입니다.", 0, 13, false, 2500, 2000));
-            AddItem(new Equipment("스파르타의 갑옷", "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.", 0, 15, false, 3500, 3000));
-            if (player.Job == "전사")
+
+
+            // 아이템 로드
+            //var items = JsonUtility.Load<Item[]>("items");
+            Item[] items = null;
+            
+
+            if (items == null)
             {
-                AddItem(new Equipment("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", 2, 0, true, 500, 300));
-                AddItem(new Equipment("철제 검", "철로 만든 검입니다.", 5, 0, false, 1500, 300));
-                AddItem(new Equipment("황금 검", "황금으로 만든 검입니다.", 8, 0, false, 2500, 300));
-                AddItem(new Equipment("전설의 검", "전설의 전사가 사용했던 검입니다.", 11, 0, false, 3500, 300));
+                // 아이템 추가
+                AddItem(new Equipment("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 5, true, false, 500, 300));
+                AddItem(new Equipment("수련자 갑옷", "수련에 도움을 주는 갑옷입니다.", 0, 9, false, false, 1500, 1000));
+                AddItem(new Equipment("황금 갑옷", "황금으로 만들어져 튼튼한 갑옷입니다.", 0, 13, false, false, 2500, 2000));
+                AddItem(new Equipment("스파르타의 갑옷", "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.", 0, 15, false, false, 3500, 3000));
+                if (player.Job == "전사")
+                {
+                    AddItem(new Equipment("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", 2, 0, true, false, 500, 300));
+                    AddItem(new Equipment("철제 검", "철로 만든 검입니다.", 5, 0, false, false, 1500, 300));
+                    AddItem(new Equipment("황금 검", "황금으로 만든 검입니다.", 8, 0, false, false, 2500, 300));
+                    AddItem(new Equipment("전설의 검", "전설의 전사가 사용했던 검입니다.", 11, 0, false, false, 3500, 300));
+                }
+                else if (player.Job == "궁수")
+                {
+                    AddItem(new Equipment("낡은 활", "쉽게 볼 수 있는 낡은 활입니다.", 2, 0, true, false, 500, 300));
+                    AddItem(new Equipment("철제 활", "철로 만든 활입니다.", 5, 0, false, false, 1500, 1300));
+                    AddItem(new Equipment("황금 활", "황금으로 만든 활입니다.", 8, 0, false, false, 2500, 2300));
+                    AddItem(new Equipment("전설의 활", "전설의 궁수가 사용했던 활입니다.", 11, 0, false, false, 3500, 3300));
+                }
+                else if (player.Job == "마법사")
+                {
+                    AddItem(new Equipment("낡은 지팡이", "쉽게 볼 수 있는 낡은 지팡이입니다.", 2, 0, true, false, 500, 300));
+                    AddItem(new Equipment("철제 지팡이", "철로 만든 지팡이입니다.", 5, 0, false, false, 1500, 1300));
+                    AddItem(new Equipment("황금 지팡이", "황금으로 만든 지팡이입니다.", 8, 0, false, false, 2500, 2300));
+                    AddItem(new Equipment("전설의 지팡이", "전설의 마법사가 사용했던 지팡이입니다.", 11, 0, false, false, 3500, 3300));
+                }
+                else if (player.Job == "도적")
+                {
+                    AddItem(new Equipment("낡은 아대", "쉽게 볼 수 있는 낡은 아대입니다.", 2, 0, true, false, 500, 300));
+                    AddItem(new Equipment("철제 아대", "철로 만든 아대입니다.", 5, 0, false, false, 1500, 1300));
+                    AddItem(new Equipment("황금 아대", "황금으로 만든 아대입니다.", 8, 0, false, false, 2500, 2300));
+                    AddItem(new Equipment("전설의 아대", "전설의 도적이 사용했던 아대입니다.", 11, 0, false, false, 3500, 3300));
+                }
+
+                AddItem(new Consumable("HP 포션", "체력을 회복해주는 물약입니다.", player.HealHP, 30, 3, true, 200, 100));
+                AddItem(new Consumable("MP 포션", "마나를 회복해주는 물약입니다.", player.HealMP, 30, 3, true, 200, 100));
             }
-            else if (player.Job == "궁수")
+            else
             {
-                AddItem(new Equipment("낡은 활", "쉽게 볼 수 있는 낡은 활입니다.", 2, 0, true, 500, 300));
-                AddItem(new Equipment("철제 활", "철로 만든 활입니다.", 5, 0, false, 1500, 1300));
-                AddItem(new Equipment("황금 활", "황금으로 만든 활입니다.", 8, 0, false, 2500, 2300));
-                AddItem(new Equipment("전설의 활", "전설의 궁수가 사용했던 활입니다.", 11, 0, false, 3500, 3300));
+                Items = items;
             }
-            else if (player.Job == "마법사")
-            {
-                AddItem(new Equipment("낡은 지팡이", "쉽게 볼 수 있는 낡은 지팡이입니다.", 2, 0, true, 500, 300));
-                AddItem(new Equipment("철제 지팡이", "철로 만든 지팡이입니다.", 5, 0, false, 1500, 1300));
-                AddItem(new Equipment("황금 지팡이", "황금으로 만든 지팡이입니다.", 8, 0, false, 2500, 2300));
-                AddItem(new Equipment("전설의 지팡이", "전설의 마법사가 사용했던 지팡이입니다.", 11, 0, false, 3500, 3300));
-            }
-            else if (player.Job == "도적")
-            {
-                AddItem(new Equipment("낡은 아대", "쉽게 볼 수 있는 낡은 아대입니다.", 2, 0, true, 500, 300));
-                AddItem(new Equipment("철제 아대", "철로 만든 아대입니다.", 5, 0, false, 1500, 1300));
-                AddItem(new Equipment("황금 아대", "황금으로 만든 아대입니다.", 8, 0, false, 2500, 2300));
-                AddItem(new Equipment("전설의 아대", "전설의 도적이 사용했던 아대입니다.", 11, 0, false, 3500, 3300));
-            }
-            AddItem(new Consumable("HP 포션", "체력을 회복해주는 물약입니다.", player.HealHP, 30, 3, true, 200, 100));
-            AddItem(new Consumable("MP 포션", "마나를 회복해주는 물약입니다.", player.HealMP, 30, 3, true, 200, 100));
 
             monsters = new Monster[]
             {
@@ -168,6 +188,8 @@ namespace TextRPG_Team
                 }
                 InvenSort();
             }
+
+            JsonUtility.Save(Items, "items");
         }
 
         private static void ExtendInventory()
@@ -195,6 +217,7 @@ namespace TextRPG_Team
         {
             item.Consume();
             item.Count--;
+            Console.WriteLine("회복을 완료했습니다.");
 
             if (item.Count == 0)
             {
@@ -216,8 +239,6 @@ namespace TextRPG_Team
 
         private static void InvenSort()
         {
-            // TODO : 장비, 회복 아이템 선택하는 창에서 장비와 회복 아이템을 분리해놓지 않으면 문제가 생김
-            // 분리해서 정렬하는 로직이 필요
             for (int i = 0; i < ItemCount; i++)
             {
                 if (i < equipmentCount)
@@ -579,7 +600,7 @@ namespace TextRPG_Team
             }
         }
 
-        private static void DisplayConsumableItem()
+        public static void DisplayConsumableItem(bool isBattleState = false)
         {
             Console.Clear();
 
@@ -609,7 +630,7 @@ namespace TextRPG_Team
                     Consumable consumable = (Consumable)curItem;
                     Console.Write($"{curItem.Name} | ");
                     Console.Write($"개수 : {consumable.Count}");
-                    Console.Write($" | {curItem.Description}");
+                    Console.Write($" | {curItem.Description} | 회복 : {consumable.Amount}");
                     Console.WriteLine();
                 }
             }
@@ -618,11 +639,16 @@ namespace TextRPG_Team
             Console.WriteLine();
             Console.WriteLine("0. 나가기");
 
-            int consumableStartIdx = ItemCount == equipmentCount ? 0 : ItemCount - equipmentCount + 1;
-            int consumableLength = ItemCount == equipmentCount ? 0 : ItemCount;
+            
             int input = CheckValidInput(0, dic.Count);
+
             if (input == 0)
             {
+                if (isBattleState)
+                {
+                    return;
+                }
+
                 DisplayInventory();
             }
             else
@@ -633,6 +659,11 @@ namespace TextRPG_Team
                 {
                     Consumable consumable = (Consumable)curItem;
                     UseItem(consumable);
+                }
+
+                if (isBattleState)
+                {
+                    return;
                 }
 
                 DisplayConsumableItem();

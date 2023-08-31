@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -17,7 +18,7 @@ namespace TextRPG_Team
             string json = JsonSerializer.Serialize(t);
             File.WriteAllText(filePath, json);
         }
-        
+
         public static T? Load<T>(string name) where T : class
         {
             string filePath = $@"{basePath}\{name}.json";
@@ -40,5 +41,6 @@ namespace TextRPG_Team
                 }
             }
         }
+
     }
 }
