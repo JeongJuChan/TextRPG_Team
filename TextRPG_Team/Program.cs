@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace TextRPG_Team
@@ -89,12 +90,14 @@ namespace TextRPG_Team
 
             
 
+
+
             monsters = new Monster[]
             {
-                new Monster("Lv.1 미니언", 1, 10, 3, 10, Items[0]),
-                new Monster("Lv.2 미니언", 2, 15, 5, 20, Items[1]),
-                new Monster("Lv.5 대포미니언", 5, 25, 8, 50, Items[2]),
-                new Monster("Lv.3 공허충", 3, 10, 9, 30, Items[3])
+                new Monster("Lv.1 미니언", 1, 10, 3, 10,  Items[8]),
+                new Monster("Lv.2 미니언", 2, 15, 5, 20, Items[9]),
+                new Monster("Lv.5 대포미니언", 5, 25, 8, 50, Items[8]),
+                new Monster("Lv.3 공허충", 3, 10, 9, 30, Items[9])
             };
 
         }
@@ -206,7 +209,6 @@ namespace TextRPG_Team
             {
                 int index = Array.IndexOf(Items, item);
                 item.ConsumableData = Items[index].ConsumableData;
-                item.ConsumableData.Count += 3;
                 Items[index] = item;
             }
             else
@@ -695,7 +697,6 @@ namespace TextRPG_Team
             Console.WriteLine();
             Console.WriteLine("0. 나가기");
 
-            
             int input = CheckValidInput(0, dic.Count);
 
             if (input == 0)
