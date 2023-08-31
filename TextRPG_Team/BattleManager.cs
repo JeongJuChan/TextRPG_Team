@@ -37,7 +37,7 @@
                 else
                 {
                     DisplayBattleScreen(false); //전투 화면 표시
-                    int input = Program.CheckValidInput(0, 2);
+                    int input = Program.CheckValidInput(0, 3);
                     switch (input)
                     {
                         case 0:
@@ -50,6 +50,9 @@
                             break;
                         case 2:
                             DisplayBattleScreen(true, true);
+                            break;
+                        case 3:
+                            Program.DisplayConsumableItem(true);
                             break;
                     }
 
@@ -138,6 +141,7 @@
                 Console.WriteLine("0. 나가기");
                 Console.WriteLine("1. 공격");
                 Console.WriteLine("2. 스킬");
+                Console.WriteLine("3. 회복 아이템");
                 Console.WriteLine("원하시는 행동을 입력해주세요.");
                 Console.Write(">> ");
             }

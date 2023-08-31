@@ -1,8 +1,17 @@
 {
   "version": 2,
+<<<<<<< HEAD
+  "dgSpecHash": "r/pB880cARfX/7RkFnk1JlJ6cn+D05l0Bjvk/WFpvvi749yU/3FQi3cwnQJDm8O/mHEzBfLTl56I850romlg7w==",
+  "success": true,
+  "projectFilePath": "D:\\TextRPG_Team\\TextRPG_Team\\TextRPG_Team.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\jjc62\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
+=======
   "dgSpecHash": "HvsFUgWzLdedYaY22acqDYWXNZyU0KF/OM8uaZYKa8tDbY+rMKB44ab3d5tmDTSfBsqNgrWsW2c8nyM6wkCMPA==",
   "success": true,
   "projectFilePath": "C:\\Users\\dudrh\\Desktop\\TextRPG_TEAM\\TextRPG_Team\\TextRPG_Team.csproj",
   "expectedPackageFiles": [],
+>>>>>>> 9c99a5adb17f60f8445be21a39c983cbc5ee9b60
   "logs": []
 }
