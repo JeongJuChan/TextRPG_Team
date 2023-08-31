@@ -19,12 +19,15 @@ namespace TextRPG_Team
         private int currentStage = 1;
         private StageProgress stageProgress;
 
+        private BossMonster boss;
+
         //생성자
-        public BattleManager(Character player, Monster[] monsters, Item[] inventory, StageProgress stageProgress)
+        public BattleManager(Character player, Monster[] monsters, Item[] inventory, StageProgress stageProgress, BossMonster boss)
         {
             this.player = prevPlayer = player;
             this.monsters = monsters;
             this.stageProgress = stageProgress;
+            this.boss = boss;
 
             prevPlayer = new Character(player);
             killedMonster = new List<Monster>();
@@ -128,9 +131,18 @@ namespace TextRPG_Team
                 newMonstersList.Add(randomMonster);
             }
 
+            if (currentStage == 5)
+            {
+                newMonstersList.Add(boss.Clone());
+            }
+
             aliveMonsters = new List<Monster>(newMonstersList);
             monsters = newMonstersList.ToArray(); // 복제된 몬스터들을 배열로 변환하여 할당
         }
+
+
+
+
 
         //전투 시작화면
         public void DisplayBattleScreen(bool showMonsterNumbers, bool isSkillPase = false)

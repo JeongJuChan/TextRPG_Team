@@ -22,7 +22,7 @@ public class Monster
         DropItem = dropitem;
     }
     
-    public Monster Clone()
+    public virtual Monster Clone()
     {
         return new Monster(Name, Level, MaxHp, Atk, Gold, DropItem);
     }
