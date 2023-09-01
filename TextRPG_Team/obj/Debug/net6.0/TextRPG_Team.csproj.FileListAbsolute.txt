@@ -13,3 +13,5 @@ C:\Users\Administrator\source\repos\TextRPG_Team\TextRPG_Team\obj\Debug\net6.0\r
 C:\Users\Administrator\source\repos\TextRPG_Team\TextRPG_Team\obj\Debug\net6.0\TextRPG_Team.pdb
 C:\Users\Administrator\source\repos\TextRPG_Team\TextRPG_Team\obj\Debug\net6.0\TextRPG_Team.genruntimeconfig.cache
 C:\Users\Administrator\source\repos\TextRPG_Team\TextRPG_Team\obj\Debug\net6.0\ref\TextRPG_Team.dll
+C:\Users\Administrator\source\repos\TextRPG_Team\TextRPG_Team\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\Administrator\source\repos\TextRPG_Team\TextRPG_Team\obj\Debug\net6.0\TextRPG_Team.csproj.CopyComplete
