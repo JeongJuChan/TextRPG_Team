@@ -76,8 +76,6 @@ namespace TextRPG_Team
             // 아이템 로드
             Item[] itemData = JsonUtility.Load<Item[]>("ItemData");
 
-            
-
             LoadUserData(itemData);
 
             
@@ -276,7 +274,7 @@ namespace TextRPG_Team
         #region 유저 데이터
         private static void SaveUserData()
         {
-            string[] userData = new string[Items.Length];
+            string[] userData = new string[ItemCount];
             for (int i = 0; i < userData.Length; i++)
             {
                 Item item = Items[i];
