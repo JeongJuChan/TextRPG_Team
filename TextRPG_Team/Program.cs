@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using TextRPG_Team.TextRPG_Team;
 
 namespace TextRPG_Team
 {
@@ -10,13 +9,10 @@ namespace TextRPG_Team
         private static Character[] jobs;
 
         private static Monster[] monsters;
-        private static BossMonster boss;
 
         private static Item[] Items;
         private static int ItemCount;
         private static int equipmentCount;
-
-        private static StageProgress stageProgress;
 
 
         static void Main(string[] args)
@@ -137,8 +133,6 @@ namespace TextRPG_Team
                 new Monster("Lv.5 대포미니언", 5, 25, 8, 50, Items[8]),
                 new Monster("Lv.3 공허충", 3, 10, 9, 30, Items[9])
             };
-
-            boss = new BossMonster("보스몹", 5, 50, 15, 1000, Items[9]);
 
         }
 
@@ -302,7 +296,6 @@ namespace TextRPG_Team
 
         public static void DisplayGameIntro()
         {
-            StageProgress stageProgress = StageProgress.Load();
 
             Console.Clear();
 
@@ -312,11 +305,11 @@ namespace TextRPG_Team
             Console.WriteLine("1. 상태보기");
             Console.WriteLine("2. 인벤토리");
             Console.WriteLine("3. 상점");
-            Console.WriteLine($"4. 전투(현재 스테이지: {stageProgress.CurrentStage})");
+            Console.WriteLine($"4. 전투");
             Console.WriteLine();
             Console.WriteLine("원하시는 행동을 입력해주세요.");
 
-            BattleManager battle = new BattleManager(player, monsters, Items, stageProgress, boss);
+            BattleManager battle = new BattleManager(player, monsters, Items);
 
             int input = CheckValidInput(1, 4);
             switch (input)

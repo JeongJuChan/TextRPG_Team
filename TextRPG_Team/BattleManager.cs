@@ -1,4 +1,4 @@
-﻿using TextRPG_Team.TextRPG_Team;
+﻿
 
 namespace TextRPG_Team
 {
@@ -16,18 +16,13 @@ namespace TextRPG_Team
         int dodgePercentage = 10;
         float criticalMod = 1.6f;
 
-        private int currentStage = 1;
-        private StageProgress stageProgress;
-
-        private BossMonster boss;
+        public int currentStage = 1;
 
         //생성자
-        public BattleManager(Character player, Monster[] monsters, Item[] inventory, StageProgress stageProgress, BossMonster boss)
+        public BattleManager(Character player, Monster[] monsters, Item[] inventory)
         {
             this.player = prevPlayer = player;
             this.monsters = monsters;
-            this.stageProgress = stageProgress;
-            this.boss = boss;
 
             prevPlayer = new Character(player);
             killedMonster = new List<Monster>();
@@ -37,53 +32,11 @@ namespace TextRPG_Team
         //전투 시작과 진행
         public void StartBattle(Character player)
         {
-            currentStage = stageProgress.CurrentStage;
-
             while (true)
             {
                 if (CheckBattleEnd())
                 {
                     DisplayerResult();
-                    if (player.CurrentHp <= 0)
-                    {
-                        Console.WriteLine();
-                        Console.WriteLine("1. 메인 화면으로 돌아가기");
-                        Console.WriteLine();
-                        Console.WriteLine("원하시는 행동을 입력하세요");
-                        Console.Write(">> ");
-
-                        int input = Program.CheckValidInput(1, 1);
-
-                        if (input == 1)
-                        {
-                            Program.DisplayGameIntro();
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine();
-                        Console.WriteLine("1. 다음 스테이지로 이동");
-                        Console.WriteLine("2. 메인 화면으로 돌아가기");
-                        Console.WriteLine();
-                        Console.WriteLine("원하시는 행동을 입력하세요");
-                        Console.Write(">> ");
-
-                        int input = Program.CheckValidInput(1, 2);
-
-                        if (input == 1)
-                        {
-                            currentStage++;
-                            stageProgress.CurrentStage = currentStage; // 스테이지 진행상황 업데이트
-                            stageProgress.Save();
-
-                            killedMonster.Clear(); // 이전 스테이지에서 잡은 몬스터 초기화
-                            ShuffleMonsters();
-                        }
-                        else
-                        {
-                            Program.DisplayGameIntro();
-                        }
-                    }
                 }
                 else
                 {
@@ -116,7 +69,6 @@ namespace TextRPG_Team
         //몬스터 랜덤 출현
         public void ShuffleMonsters()
         {
-            currentStage = stageProgress.CurrentStage;
 
             int minMonsters = 1;
             int maxMonsters = currentStage + 1; // 스테이지마다 최대 몬스터수 증가
@@ -129,11 +81,6 @@ namespace TextRPG_Team
                 int randomIndex = Random.Next(0, monsters.Length);
                 Monster randomMonster = monsters[randomIndex].Clone(); // 몬스터를 복제하여 추가
                 newMonstersList.Add(randomMonster);
-            }
-
-            if (currentStage == 5)
-            {
-                newMonstersList.Add(boss.Clone());
             }
 
             aliveMonsters = new List<Monster>(newMonstersList);
@@ -444,6 +391,44 @@ namespace TextRPG_Team
             Console.WriteLine("아무 키를 눌러 계속");
             Console.Write(">> ");
             Console.ReadLine();
+
+            if (player.CurrentHp <= 0)
+            {
+                Console.WriteLine();
+                Console.WriteLine("1. 메인 화면으로 돌아가기");
+                Console.WriteLine();
+                Console.WriteLine("원하시는 행동을 입력하세요");
+                Console.Write(">> ");
+
+                int input = Program.CheckValidInput(1, 1);
+
+                if (input == 1)
+                {
+                    Program.DisplayGameIntro();
+                }
+            }
+            else
+            {
+                Console.WriteLine();
+                Console.WriteLine("1. 다음 스테이지로 이동");
+                Console.WriteLine("2. 메인 화면으로 돌아가기");
+                Console.WriteLine();
+                Console.WriteLine("원하시는 행동을 입력하세요");
+                Console.Write(">> ");
+
+                int input = Program.CheckValidInput(1, 2);
+
+                if (input == 1)
+                {
+                    currentStage++;
+                    killedMonster.Clear(); // 이전 스테이지에서 잡은 몬스터 초기화
+                    ShuffleMonsters();
+                }
+                else
+                {
+                    Program.DisplayGameIntro();
+                }
+            }
         }
 
         //텍스트 색상 지정
