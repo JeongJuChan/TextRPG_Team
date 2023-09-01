@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace TextRPG_Team
 {
     public class Program 
@@ -12,11 +9,6 @@ namespace TextRPG_Team
 
         private static Item[] Items;
         private static int ItemCount;
-
-        // 1. Item을 상속받는 Equipment와 Consumable이 있고 이미 Item배열인 Items가 있는 현재 구조에서
-        //    Equipment 배열과 Consumable 배열을 만들어 json으로 따로 관리하려 했으나 낭비라고 생각이 듬
-        // 2. 그래서 둘의 데이터는 같이 관리하되 장착했는지 여부와 몇 개인지는 Item에 통합하여 관리하도록 함 (사용자 데이터 관련한 부분들만)
-
 
         static void Main(string[] args)
         {
@@ -102,6 +94,209 @@ namespace TextRPG_Team
 
         }
 
+        
+
+        
+
+        #region 아이템 관리
+
+        public static void DropItem(List<Item> items)
+        {
+            foreach(var item in items)
+            {
+                AddItem(item);
+            }
+
+            SaveUserData();
+        }
+
+        //원래 코드
+        static void AddItem(Item item)
+        {
+            if (Items.Length / 2 < ItemCount)
+            {
+                ExtendInventory();
+            }
+
+            if (Items.Contains(item) && item.Type == ItemType.Consumable)
+            {
+                int index = Array.IndexOf(Items, item);
+                item.ConsumableData = Items[index].ConsumableData;
+                Items[index] = item;
+            }
+            else
+            {
+                Items[ItemCount] = item;
+                ++ItemCount;
+                
+                InvenSort();
+            }
+
+        }
+        
+
+        static void EquipItem(Item.Equipment itemData)
+        {
+            itemData.IsEquiped = true;
+        }
+
+        static void UnequipItem(Item.Equipment itemData)
+        {
+            itemData.IsEquiped = false;
+        }
+
+        static void UseItem(Item.Consumable itemData)
+        {
+            player.HealHP(itemData.Amount);
+            itemData.Count--;
+            Console.WriteLine("회복을 완료했습니다.");
+
+            if (itemData.Count == 0)
+            {
+                int index = Array.IndexOf(Items, itemData);
+                Items[index] = null;
+
+                InvenSort(index);
+                ItemCount--;
+            }
+
+
+            SaveUserData();
+        }
+
+        
+
+        public static int GetItemAtkAmount()
+        {
+            int itemAtk = 0;
+            for (int i = 0; i < Items.Length; i++)
+            {
+                if (Items[i] == null)
+                    break;
+
+                Item curItem = Items[i];
+                if (curItem.Type == ItemType.Equipment)
+                {
+                    Item.Equipment equipment = curItem.EquipmentData;
+                    if (equipment.IsEquiped)
+                        itemAtk += equipment.Atk;
+                }
+            }
+
+            return itemAtk;
+        }
+
+        static int GetItemDefAmount()
+        {
+            int itemDef = 0;
+            for (int i = 0; i < Items.Length; i++)
+            {
+                if (Items[i] == null)
+                    break;
+
+                Item curItem = Items[i];
+                if (curItem.Type == ItemType.Equipment)
+                {
+                    Item.Equipment equipment = curItem.EquipmentData;
+                    if (equipment.IsEquiped)
+                    {
+                        itemDef += equipment.Def;
+                    }
+                }
+            }
+
+            return itemDef;
+        }
+
+        #region 인벤토리
+        private static void EarnDefaultItemWithID(int id)
+        {
+            for (int i = 0; i < Items.Length; i++)
+            {
+                if (Items[i].Id == id)
+                {
+                    Items[i].IsHave = true;
+                }
+            }
+        }
+
+        private static void ExtendInventory()
+        {
+            var newInven = new Item[Items.Length * 2];
+            for (int i = 0; i < Items.Length; i++)
+            {
+                newInven[i] = Items[i];
+            }
+
+            Items = newInven;
+        }
+
+        private static void InvenSort(int sortIndex)
+        {
+            for (int i = sortIndex; i < ItemCount - 1; i++)
+            {
+                SwapItem(i, i + 1);
+            }
+        }
+
+        private static void InvenSort()
+        {
+            int equipmentCount = GetEquipmentCount();
+            for (int i = 0; i < ItemCount; i++)
+            {
+                if (i < equipmentCount)
+                {
+                    if (Items[i].Type == ItemType.Consumable)
+                    {
+                        SwapItem(i, ItemCount - 1);
+                    }
+                }
+                else
+                {
+                    if (Items[i].Type == ItemType.Equipment)
+                    {
+                        SwapItem(i, equipmentCount - 1);
+                    }
+                }
+
+            }
+        }
+
+        private static void SwapItem(int i, int j)
+        {
+            Item item = Items[i];
+            Items[i] = Items[j];
+            Items[j] = item;
+        }
+        #endregion
+
+        #endregion
+
+
+        #region 유저 데이터
+        private static void SaveUserData()
+        {
+            string[] userData = new string[Items.Length];
+            for (int i = 0; i < userData.Length; i++)
+            {
+                Item item = Items[i];
+                userData[i] = $"{item.Id}_{item.IsHave}_";
+                switch (item.Type)
+                {
+                    case ItemType.Equipment:
+                        // Id_IsHave_Atk_Def_IsEquiped 
+                        userData[i] += $"{item.EquipmentData.Atk}_{item.EquipmentData.Def}_{item.EquipmentData.IsEquiped}"; 
+                        break;
+                    case ItemType.Consumable:
+                        // Id_IsHave_Count_Amount
+                        userData[i] += $"{item.ConsumableData.Count}_{item.ConsumableData.Amount}"; 
+                        break;
+                }
+            }
+
+            JsonUtility.Save(userData, "UserData");
+        }
+
         private static void LoadUserData(Item[] itemData)
         {
             // 유저 데이터
@@ -167,202 +362,15 @@ namespace TextRPG_Team
                                 item.ConsumableData = new Item.Consumable(int.Parse(userDataArr[2]), int.Parse(userDataArr[3]));
                                 break;
                         }
-                        
+
                         AddItem(item);
                     }
                 }
             }
         }
 
-        private static void EarnDefaultItemWithID(int id)
-        {
-            for (int i = 0; i < Items.Length; i++)
-            {
-                if (Items[i].Id == id)
-                {
-                    Items[i].IsHave = true;
-                }
-            }
-        }
-
-        #region 아이템 관리
-
-        public static void DropItem(List<Item> items)
-        {
-            foreach(var item in items)
-            {
-                AddItem(item);
-            }
-
-            SaveUserData();
-        }
-
-        //원래 코드
-        static void AddItem(Item item)
-        {
-            if (Items.Length / 2 < ItemCount)
-            {
-                ExtendInventory();
-            }
-
-            if (Items.Contains(item) && item.Type == ItemType.Consumable)
-            {
-                int index = Array.IndexOf(Items, item);
-                item.ConsumableData = Items[index].ConsumableData;
-                Items[index] = item;
-            }
-            else
-            {
-                Items[ItemCount] = item;
-                ++ItemCount;
-                
-                InvenSort();
-            }
-
-        }
-
-        private static void SaveUserData()
-        {
-            string[] userData = new string[Items.Length];
-            for (int i = 0; i < userData.Length; i++)
-            {
-                Item item = Items[i];
-                userData[i] = $"{item.Id}_{item.IsHave}_";
-                switch (item.Type)
-                {
-                    case ItemType.Equipment:
-                        // Id_IsHave_Atk_Def_IsEquiped 
-                        userData[i] += $"{item.EquipmentData.Atk}_{item.EquipmentData.Def}_{item.EquipmentData.IsEquiped}"; 
-                        break;
-                    case ItemType.Consumable:
-                        // Id_IsHave_Count_Amount
-                        userData[i] += $"{item.ConsumableData.Count}_{item.ConsumableData.Amount}"; 
-                        break;
-                }
-            }
-
-            JsonUtility.Save(userData, "UserData");
-        }
-
-        private static void ExtendInventory()
-        {
-            var newInven = new Item[Items.Length * 2];
-            for (int i = 0; i < Items.Length; i++)
-            {
-                newInven[i] = Items[i];
-            }
-
-            Items = newInven;
-        }
-
-        static void EquipItem(Item.Equipment itemData)
-        {
-            itemData.IsEquiped = true;
-        }
-
-        static void UnequipItem(Item.Equipment itemData)
-        {
-            itemData.IsEquiped = false;
-        }
-
-        static void UseItem(Item.Consumable itemData)
-        {
-            player.HealHP(itemData.Amount);
-            itemData.Count--;
-            Console.WriteLine("회복을 완료했습니다.");
-
-            if (itemData.Count == 0)
-            {
-                int index = Array.IndexOf(Items, itemData);
-                Items[index] = null;
-
-                InvenSort(index);
-                ItemCount--;
-            }
 
 
-            SaveUserData();
-        }
-
-        private static void InvenSort(int sortIndex)
-        {
-            for (int i = sortIndex; i < ItemCount - 1; i++)
-            {
-                SwapItem(i, i + 1);
-            }
-        }
-
-        private static void InvenSort()
-        {
-            int equipmentCount = GetEquipmentCount();
-            for (int i = 0; i < ItemCount; i++)
-            {
-                if (i < equipmentCount)
-                {
-                    if (Items[i].Type == ItemType.Consumable)
-                    {
-                        SwapItem(i, ItemCount - 1);
-                    }
-                }
-                else
-                {
-                    if (Items[i].Type == ItemType.Equipment)
-                    {
-                        SwapItem(i, equipmentCount - 1);
-                    }
-                }
-
-            }
-        }
-
-        private static void SwapItem(int i, int j)
-        {
-            Item item = Items[i];
-            Items[i] = Items[j];
-            Items[j] = item;
-        }
-
-        public static int GetItemAtkAmount()
-        {
-            int itemAtk = 0;
-            for (int i = 0; i < Items.Length; i++)
-            {
-                if (Items[i] == null)
-                    break;
-
-                Item curItem = Items[i];
-                if (curItem.Type == ItemType.Equipment)
-                {
-                    Item.Equipment equipment = curItem.EquipmentData;
-                    if (equipment.IsEquiped)
-                        itemAtk += equipment.Atk;
-                }
-            }
-
-            return itemAtk;
-        }
-
-        static int GetItemDefAmount()
-        {
-            int itemDef = 0;
-            for (int i = 0; i < Items.Length; i++)
-            {
-                if (Items[i] == null)
-                    break;
-
-                Item curItem = Items[i];
-                if (curItem.Type == ItemType.Equipment)
-                {
-                    Item.Equipment equipment = curItem.EquipmentData;
-                    if (equipment.IsEquiped)
-                    {
-                        itemDef += equipment.Def;
-                    }
-                }
-            }
-
-            return itemDef;
-        }
         #endregion
 
 
@@ -847,6 +855,9 @@ namespace TextRPG_Team
             int count = 0;
             foreach (var item in Items)
             {
+                if (item == null)
+                    continue;
+
                 if (item.Type == ItemType.Equipment)
                 {
                     count++;

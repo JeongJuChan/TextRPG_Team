@@ -1,16 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using System.Xml.Linq;
+﻿using System.Text.Json;
 
 namespace TextRPG_Team
 {
 
     public class JsonUtility
     {
-        static readonly string basePath = Directory.GetParent(Environment.CurrentDirectory).FullName;
+        static readonly string basePath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
 
         public static void Save<T>(T t, string name) where T : class
         {
