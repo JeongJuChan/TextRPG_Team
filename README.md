@@ -5,10 +5,10 @@ https://www.notion.so/05-B05-53b435b6a2bb4701bb2d6a123cf94242
 ## 기능 - 주찬
 ### 스킬 기능
 #### CharacterSkills에서 단일 타겟 스킬과 다중 타겟 스킬을 구현하였습니다.
-https://github.com/JeongJuChan/TextRPG_Team/blob/main/TextRPG_Team/CharacterSkills.cs
+[https://github.com/JeongJuChan/TextRPG_Team/blob/main/TextRPG_Team/CharacterSkills.cs](https://github.com/JeongJuChan/TextRPG_Team/blob/f4522378a36daeabf08f8c5a1e19aa0ac0efaa06/TextRPG_Team/CharacterSkills.cs#L3)
 
 #### Skill이라는 클래스를 만들어 타입 별 스킬을 등록할 수 있게 구현하였습니다.
-https://github.com/JeongJuChan/TextRPG_Team/blob/main/TextRPG_Team/Skill.cs
+[https://github.com/JeongJuChan/TextRPG_Team/blob/main/TextRPG_Team/Skill.cs](https://github.com/JeongJuChan/TextRPG_Team/blob/f4522378a36daeabf08f8c5a1e19aa0ac0efaa06/TextRPG_Team/Skill.cs#L3)
 
 #### 배틀 로직과 합쳐 스킬을 적용하였습니다.
 https://github.com/JeongJuChan/TextRPG_Team/blob/a2abf73d0b1bc653b756e6e9447485bf2ad1f130/TextRPG_Team/BattleManager.cs#L152C9-L152C42
