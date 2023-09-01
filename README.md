@@ -7,7 +7,7 @@
 ## 팀 노션
 https://www.notion.so/05-B05-53b435b6a2bb4701bb2d6a123cf94242
 
-## 주요 기능
+## 주요 기능🎮
 ---
 ## 기능 - 주찬
 ### 스킬 기능
@@ -62,6 +62,7 @@ https://github.com/JeongJuChan/TextRPG_Team/blob/ed9422af751cf961fb95e95dce5d14d
  ![image](https://github.com/JeongJuChan/TextRPG_Team/assets/111439484/551ff808-1263-49c1-b252-f2aba1b40726)
 ---
 
+## 개발 스택
 ### Environment
 ![Visual Studio](https://img.shields.io/badge/Visual%20Studio-007ACC?style=for-the-badge&logo=Visual%20Studio&logoColor=white)
 ![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white)
