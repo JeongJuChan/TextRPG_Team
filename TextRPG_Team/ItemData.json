@@ -1,0 +1,308 @@
+[
+	{
+		"Id": 1001,
+		"Type": 0,
+		"Name": "무쇠갑옷",
+		"Description": "무쇠로 만들어져 튼튼한 갑옷입니다.",
+		"IsHave": false,
+		"BuyGold": 500,
+		"SellGold": 300,
+		"EquipmentData": {
+			"Atk": 0,
+			"Def": 5,
+			"IsEquiped": false
+		}
+	},
+	{
+		"Id": 1002,
+		"Type": 0,
+		"Name": "수련자 갑옷",
+		"Description": "수련에 도움을 주는 갑옷입니다.",
+		"IsHave": false,
+		"BuyGold": 1500,
+		"SellGold": 1000,
+		"EquipmentData": {
+			"Atk": 0,
+			"Def": 9,
+			"IsEquiped": false
+		}
+	},
+	{
+		"Id": 1003,
+		"Type": 0,
+		"Name": "황금 갑옷",
+		"Description": "황금으로 만들어져 튼튼한 갑옷입니다.",
+		"IsHave": false,
+		"BuyGold": 2500,
+		"SellGold": 2000,
+		"EquipmentData": {
+			"Atk": 0,
+			"Def": 13,
+			"IsEquiped": false
+		}
+	},
+	{
+		"Id": 1004,
+		"Type": 0,
+		"Name": "스파르타의 갑옷",
+		"Description": "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.",
+		"IsHave": false,
+		"BuyGold": 3500,
+		"SellGold": 3000,
+		"EquipmentData": {
+			"Atk": 0,
+			"Def": 15,
+			"IsEquiped": false
+		}
+	},
+	{
+		"Id": 1005,
+		"Type": 0,
+		"Name": "낡은 검",
+		"Description": "쉽게 볼 수 있는 낡은 검입니다.",
+		"IsHave": false,
+		"BuyGold": 500,
+		"SellGold": 300,
+		"EquipmentData": {
+			"Atk": 2,
+			"Def": 0,
+			"IsEquiped": false
+		}
+	},
+	{
+		"Id": 1006,
+		"Type": 0,
+		"Name": "철제 검",
+		"Description": "철로 만든 검입니다.",
+		"IsHave": false,
+		"BuyGold": 1500,
+		"SellGold": 1300,
+		"EquipmentData": {
+			"Atk": 5,
+			"Def": 0,
+			"IsEquiped": false
+		}
+	},
+	{
+		"Id": 1007,
+		"Type": 0,
+		"Name": "황금 검",
+		"Description": "황금으로 만든 검입니다.",
+		"IsHave": false,
+		"BuyGold": 2500,
+		"SellGold": 2300,
+		"EquipmentData": {
+			"Atk": 8,
+			"Def": 0,
+			"IsEquiped": false
+		}
+	},
+	{
+		"Id": 1008,
+		"Type": 0,
+		"Name": "전설의 검",
+		"Description": "전설의 전사가 사용했던 검입니다.",
+		"IsHave": false,
+		"BuyGold": 3500,
+		"SellGold": 3300,
+		"EquipmentData": {
+			"Atk": 11,
+			"Def": 0,
+			"IsEquiped": false
+		}
+	},
+	{
+		"Id": 1009,
+		"Type": 0,
+		"Name": "낡은 활",
+		"Description": "쉽게 볼 수 있는 낡은 활입니다.",
+		"IsHave": false,
+		"BuyGold": 500,
+		"SellGold": 300,
+		"EquipmentData": {
+			"Atk": 2,
+			"Def": 0,
+			"IsEquiped": false
+		}
+	},
+	{
+		"Id": 1010,
+		"Type": 0,
+		"Name": "철제 활",
+		"Description": "철로 만든 활입니다.",
+		"IsHave": false,
+		"BuyGold": 1500,
+		"SellGold": 1300,
+		"EquipmentData": {
+			"Atk": 5,
+			"Def": 0,
+			"IsEquiped": false
+		}
+	},
+	{
+		"Id": 1011,
+		"Type": 0,
+		"Name": "황금 활",
+		"Description": "황금으로 만든 활입니다.",
+		"IsHave": false,
+		"BuyGold": 1500,
+		"SellGold": 2300,
+		"EquipmentData": {
+			"Atk": 8,
+			"Def": 0,
+			"IsEquiped": false
+		}
+	},
+	{
+		"Id": 1012,
+		"Type": 0,
+		"Name": "전설의 활",
+		"Description": "전설의 궁수가 사용했던 활입니다.",
+		"IsHave": false,
+		"BuyGold": 3500,
+		"SellGold": 3300,
+		"EquipmentData": {
+			"Atk": 11,
+			"Def": 0,
+			"IsEquiped": false
+		}
+	},
+	{
+		"Id": 1013,
+		"Type": 0,
+		"Name": "낡은 지팡이",
+		"Description": "쉽게 볼 수 있는 낡은 지팡이입니다.",
+		"IsHave": false,
+		"BuyGold": 500,
+		"SellGold": 300,
+		"EquipmentData": {
+			"Atk": 2,
+			"Def": 0,
+			"IsEquiped": false
+		}
+	},
+	{
+		"Id": 1014,
+		"Type": 0,
+		"Name": "철제 지팡이",
+		"Description": "철로 만든 지팡이입니다.",
+		"IsHave": false,
+		"BuyGold": 1500,
+		"SellGold": 1300,
+		"EquipmentData": {
+			"Atk": 5,
+			"Def": 0,
+			"IsEquiped": false
+		}
+	},
+	{
+		"Id": 1015,
+		"Type": 0,
+		"Name": "황금 지팡이",
+		"Description": "황금으로 만든 지팡이입니다.",
+		"IsHave": false,
+		"BuyGold": 1500,
+		"SellGold": 2300,
+		"EquipmentData": {
+			"Atk": 8,
+			"Def": 0,
+			"IsEquiped": false
+		}
+	},
+	{
+		"Id": 1016,
+		"Type": 0,
+		"Name": "전설의 지팡이",
+		"Description": "전설의 마법사가 사용했던 지팡이입니다.",
+		"IsHave": false,
+		"BuyGold": 3500,
+		"SellGold": 3300,
+		"EquipmentData": {
+			"Atk": 11,
+			"Def": 0,
+			"IsEquiped": false
+		}
+	},
+	{
+		"Id": 1017,
+		"Type": 0,
+		"Name": "낡은 아대",
+		"Description": "쉽게 볼 수 있는 낡은 아대입니다.",
+		"IsHave": false,
+		"BuyGold": 500,
+		"SellGold": 300,
+		"EquipmentData": {
+			"Atk": 2,
+			"Def": 0,
+			"IsEquiped": false
+		}
+	},
+	{
+		"Id": 1018,
+		"Type": 0,
+		"Name": "철제 아대",
+		"Description": "철로 만든 아대입니다.",
+		"IsHave": false,
+		"BuyGold": 1500,
+		"SellGold": 1300,
+		"EquipmentData": {
+			"Atk": 5,
+			"Def": 0,
+			"IsEquiped": false
+		}
+	},
+	{
+		"Id": 1019,
+		"Type": 0,
+		"Name": "황금 아대",
+		"Description": "황금으로 만든 아대입니다.",
+		"IsHave": false,
+		"BuyGold": 1500,
+		"SellGold": 2300,
+		"EquipmentData": {
+			"Atk": 8,
+			"Def": 0,
+			"IsEquiped": false
+		}
+	},
+	{
+		"Id": 1020,
+		"Type": 0,
+		"Name": "전설의 아대",
+		"Description": "전설의 도적이 사용했던 아대입니다.",
+		"IsHave": false,
+		"BuyGold": 3500,
+		"SellGold": 3300,
+		"EquipmentData": {
+			"Atk": 11,
+			"Def": 0,
+			"IsEquiped": false
+		}
+	},
+	{
+		"Id": 1021,
+		"Type": 1,
+		"Name": "HP 포션",
+		"Description": "체력을 회복해주는 물약입니다.",
+		"IsHave": false,
+		"BuyGold": 1500,
+		"SellGold": 2300,
+		"ConsumableData": {
+			"Amount": 30,
+			"Count": 3
+		}
+	},
+	{
+		"Id": 1022,
+		"Type": 1,
+		"Name": "MP 포션",
+		"Description": "마나를 회복해주는 물약입니다.",
+		"IsHave": false,
+		"BuyGold": 1500,
+		"SellGold": 2300,
+		"ConsumableData": {
+			"Amount": 30,
+			"Count": 3
+		}
+	}
+]

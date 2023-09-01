@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TextRPG_Team
+﻿namespace TextRPG_Team
 {
     public class CharacterSkills
     {
