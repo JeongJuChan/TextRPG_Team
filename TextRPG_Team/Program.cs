@@ -78,23 +78,68 @@ namespace TextRPG_Team
 
             LoadUserData(itemData);
 
-            
 
+            Item dropItemData = null;
+            switch (player.Job)
+            {
+                case "전사":
+                    dropItemData = GetDropEquipmentWithID(itemData, 1005);
+                    break;
+                case "궁수":
+                    dropItemData = GetDropEquipmentWithID(itemData, 1009);
+                    break;
+                case "마법사":
+                    dropItemData = GetDropEquipmentWithID(itemData, 1013);
+                    break;
+                case "도적":
+                    dropItemData = GetDropEquipmentWithID(itemData, 1017);
+                    break;
+            }
 
+            Item dropItemDefault = SetItemData(Items[0]);
+            Item dropItemOfJob = SetItemData(dropItemData);
 
             monsters = new Monster[]
             {
-                new Monster("Lv.1 미니언", 1, 10, 3, 10,  Items[8]),
-                new Monster("Lv.2 미니언", 2, 15, 5, 20, Items[9]),
-                new Monster("Lv.5 대포미니언", 5, 25, 8, 50, Items[8]),
-                new Monster("Lv.3 공허충", 3, 10, 9, 30, Items[9])
+                new Monster("Lv.1 미니언", 1, 10, 3, 10, dropItemDefault),
+                new Monster("Lv.2 미니언", 2, 15, 5, 20, dropItemOfJob),
+                new Monster("Lv.5 대포미니언", 5, 25, 8, 50, Items[ItemCount - 2]),
+                new Monster("Lv.3 공허충", 3, 10, 9, 30, Items[ItemCount - 1])
             };
 
         }
 
-        
+        public static Item SetItemData(Item dropItemData)
+        {
+            Item item = new Item(dropItemData.Id, dropItemData.Name, dropItemData.Description,
+                dropItemData.Type, dropItemData.IsHave, dropItemData.BuyGold, dropItemData.SellGold);
+            switch (item.Type)
+            {
+                case ItemType.Equipment:
+                    Equipment equipment = dropItemData.EquipmentData;
+                    item.EquipmentData = new Equipment(equipment.Atk, equipment.Def, equipment.IsEquiped);
+                    break;
+                case ItemType.Consumable:
+                    Consumable consumable = dropItemData.ConsumableData;
+                    item.ConsumableData = new Consumable(consumable.Count, consumable.Amount);
+                    break;
+            }
 
-        
+            return item;
+        }
+
+        private static Item GetDropEquipmentWithID(Item[] itemData, int id)
+        {
+            foreach (var item in itemData)
+            {
+                if (item.Id == id)
+                {
+                    return item;
+                }
+            }
+
+            return null;
+        }
 
         #region 아이템 관리
 
@@ -116,42 +161,52 @@ namespace TextRPG_Team
                 ExtendInventory();
             }
 
-            if (Items.Contains(item) && item.Type == ItemType.Consumable)
+            if (item.Type == ItemType.Consumable)
             {
-                int index = Array.IndexOf(Items, item);
-                item.ConsumableData = Items[index].ConsumableData;
-                Items[index] = item;
+                if (Items.Contains(item))
+                {
+                    int index = Array.IndexOf(Items, item);
+                    Items[index].ConsumableData.Count++;
+                    Items[index] = item;
+                }
+                else
+                {
+                    Items[ItemCount] = item;
+                    ++ItemCount;
+
+                    InvenSort();
+                }
             }
             else
             {
                 Items[ItemCount] = item;
                 ++ItemCount;
-                
+
                 InvenSort();
             }
-
         }
         
 
-        static void EquipItem(Item.Equipment itemData)
+        static void EquipItem(Equipment itemData)
         {
             itemData.IsEquiped = true;
         }
 
-        static void UnequipItem(Item.Equipment itemData)
+        static void UnequipItem(Equipment itemData)
         {
             itemData.IsEquiped = false;
         }
 
-        static void UseItem(Item.Consumable itemData)
+        static void UseItem(Item item)
         {
+            Consumable itemData = item.ConsumableData;
             player.HealHP(itemData.Amount);
             itemData.Count--;
             Console.WriteLine("회복을 완료했습니다.");
 
             if (itemData.Count == 0)
             {
-                int index = Array.IndexOf(Items, itemData);
+                int index = Array.IndexOf(Items, item);
                 Items[index] = null;
 
                 InvenSort(index);
@@ -175,7 +230,7 @@ namespace TextRPG_Team
                 Item curItem = Items[i];
                 if (curItem.Type == ItemType.Equipment)
                 {
-                    Item.Equipment equipment = curItem.EquipmentData;
+                    Equipment equipment = curItem.EquipmentData;
                     if (equipment.IsEquiped)
                         itemAtk += equipment.Atk;
                 }
@@ -195,7 +250,7 @@ namespace TextRPG_Team
                 Item curItem = Items[i];
                 if (curItem.Type == ItemType.Equipment)
                 {
-                    Item.Equipment equipment = curItem.EquipmentData;
+                    Equipment equipment = curItem.EquipmentData;
                     if (equipment.IsEquiped)
                     {
                         itemDef += equipment.Def;
@@ -214,6 +269,7 @@ namespace TextRPG_Team
                 if (Items[i].Id == id)
                 {
                     Items[i].IsHave = true;
+                    break;
                 }
             }
         }
@@ -353,11 +409,11 @@ namespace TextRPG_Team
                         {
                             case ItemType.Equipment:
                                 // Id_IsHave_Atk_Def_IsEquiped 
-                                item.EquipmentData = new Item.Equipment(int.Parse(userDataArr[2]), int.Parse(userDataArr[3]), bool.Parse(userDataArr[4]));
+                                item.EquipmentData = new Equipment(int.Parse(userDataArr[2]), int.Parse(userDataArr[3]), bool.Parse(userDataArr[4]));
                                 break;
                             case ItemType.Consumable:
                                 // Id_IsHave_Count_Amount
-                                item.ConsumableData = new Item.Consumable(int.Parse(userDataArr[2]), int.Parse(userDataArr[3]));
+                                item.ConsumableData = new Consumable(int.Parse(userDataArr[2]), int.Parse(userDataArr[3]));
                                 break;
                         }
 
@@ -490,7 +546,7 @@ namespace TextRPG_Team
                         break;
                     case ItemType.Consumable:
                         Console.ResetColor();
-                        Item.Consumable consumable = curItem.ConsumableData;
+                        Consumable consumable = curItem.ConsumableData;
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.Write($"{curItem.Name} | ");
                         Console.Write($"개수 : {consumable.Count}");
@@ -542,7 +598,7 @@ namespace TextRPG_Team
                         break;
                     case ItemType.Consumable:
                         Console.ResetColor();
-                        Item.Consumable consumable = curItem.ConsumableData;
+                        Consumable consumable = curItem.ConsumableData;
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.Write($"{i + 1}. ");
                         Console.Write($"{curItem.Name} | ");
@@ -590,7 +646,7 @@ namespace TextRPG_Team
                             Items[input - 1].IsHave = true;
                             if (Items[input - 1].Type == ItemType.Consumable)
                             {
-                                Item.Consumable consumableItem = Items[input - 1].ConsumableData;
+                                Consumable consumableItem = Items[input - 1].ConsumableData;
                                 consumableItem.Count++;
                             }
                             DisplayShopPurchaseOrSell();
@@ -630,7 +686,7 @@ namespace TextRPG_Team
                         break;
                     case ItemType.Consumable:
                         Console.ResetColor();
-                        Item.Consumable consumable = curItem.ConsumableData;
+                        Consumable consumable = curItem.ConsumableData;
                         Console.BackgroundColor = ConsoleColor.DarkBlue;
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.Write($"{curItem.Name} | ");
@@ -691,7 +747,7 @@ namespace TextRPG_Team
                     Console.Write($"{num} ");
                     dic.Add(num, i);
                     num++;
-                    Item.Consumable consumable = curItem.ConsumableData;
+                    Consumable consumable = curItem.ConsumableData;
                     Console.Write($"{curItem.Name} | ");
                     Console.Write($"개수 : {consumable.Count}");
                     Console.Write($" | {curItem.Description} | 회복 : {consumable.Amount}");
@@ -720,8 +776,7 @@ namespace TextRPG_Team
 
                 if (curItem.Type == ItemType.Consumable)
                 {
-                    Item.Consumable consumable = curItem.ConsumableData;
-                    UseItem(consumable);
+                    UseItem(curItem);
                 }
 
                 if (isBattleState)
@@ -735,7 +790,7 @@ namespace TextRPG_Team
 
         private static void DisplayEquipment(Item curItem)
         {
-            Item.Equipment equipment = curItem.EquipmentData;
+            Equipment equipment = curItem.EquipmentData;
             if (equipment.IsEquiped)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -751,7 +806,7 @@ namespace TextRPG_Team
 
         private static void DisplayShopEquipments(Item curItem)
         {
-            Item.Equipment equipment = curItem.EquipmentData;
+            Equipment equipment = curItem.EquipmentData;
             
             Console.Write($"{curItem.Name} | ");
             if (equipment != null)
@@ -803,7 +858,7 @@ namespace TextRPG_Team
                     Console.Write($"{num} ");
                     dic.Add(num, i);
                     num++;
-                    Item.Equipment equipment = curItem.EquipmentData;
+                    Equipment equipment = curItem.EquipmentData;
 
                     if (equipment.IsEquiped)
                     {
@@ -834,7 +889,7 @@ namespace TextRPG_Team
 
                 if (curItem.Type == ItemType.Equipment)
                 {
-                    Item.Equipment equipment = curItem.EquipmentData;
+                    Equipment equipment = curItem.EquipmentData;
                     if (equipment.IsEquiped)
                         UnequipItem(equipment);
                     else
@@ -878,7 +933,7 @@ namespace TextRPG_Team
                 bool parseSuccess = int.TryParse(input, out var ret);
                 if (parseSuccess)
                 {
-                    if ((ret >= min && ret <= max) || ret == 0)
+                    if ((ret >= min && ret <= max))
                         return ret;
                    
                 }
