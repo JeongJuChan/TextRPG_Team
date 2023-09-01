@@ -360,6 +360,11 @@
                 int dropGold = 0;
                 foreach (var monster in killedMonster)
                 {
+                    if (monster.DropItem.Type == ItemType.Equipment)
+                    {
+                        Item item = Program.SetItemData(monster.DropItem);
+                        monster.DropItem = item;
+                    }
                     drops.Add(monster.DropItem);
                     dropGold += monster.Gold;
                 }
