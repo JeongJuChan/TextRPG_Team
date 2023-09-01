@@ -29,6 +29,5 @@
             Description = description;
             TargetCount = targetCount;
         }
-
     }
 }

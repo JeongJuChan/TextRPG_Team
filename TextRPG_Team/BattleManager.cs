@@ -1,6 +1,4 @@
-﻿
-
-namespace TextRPG_Team
+﻿namespace TextRPG_Team
 {
     public class BattleManager
     {
@@ -16,14 +14,11 @@ namespace TextRPG_Team
         int dodgePercentage = 10;
         float criticalMod = 1.6f;
 
-        public int currentStage = 1;
-
         //생성자
         public BattleManager(Character player, Monster[] monsters, Item[] inventory)
         {
             this.player = prevPlayer = player;
             this.monsters = monsters;
-
             prevPlayer = new Character(player);
             killedMonster = new List<Monster>();
             ShuffleMonsters(); // 몬스터 배열
@@ -37,11 +32,12 @@ namespace TextRPG_Team
                 if (CheckBattleEnd())
                 {
                     DisplayerResult();
+                    Program.DisplayGameIntro();
                 }
                 else
                 {
-                    DisplayBattleScreen(false);
-                    int input = Program.CheckValidInput(0, 2);
+                    DisplayBattleScreen(false); //전투 화면 표시
+                    int input = Program.CheckValidInput(0, 3);
                     switch (input)
                     {
                         case 0:
@@ -55,11 +51,13 @@ namespace TextRPG_Team
                         case 2:
                             DisplayBattleScreen(true, true);
                             break;
+                        case 3:
+                            Program.DisplayConsumableItem(true);
+                            break;
                     }
 
                     MonsterTurn();
 
-                    
                 }
             }
 
@@ -69,11 +67,7 @@ namespace TextRPG_Team
         //몬스터 랜덤 출현
         public void ShuffleMonsters()
         {
-
-            int minMonsters = 1;
-            int maxMonsters = currentStage + 1; // 스테이지마다 최대 몬스터수 증가
-            int numberOfMonsters = Random.Next(minMonsters, maxMonsters);
-
+            int numberOfMonsters = Random.Next(1, 5); // 1부터 4까지 랜덤한 숫자
             List<Monster> newMonstersList = new List<Monster>();
 
             for (int i = 0; i < numberOfMonsters; i++)
@@ -86,10 +80,6 @@ namespace TextRPG_Team
             aliveMonsters = new List<Monster>(newMonstersList);
             monsters = newMonstersList.ToArray(); // 복제된 몬스터들을 배열로 변환하여 할당
         }
-
-
-
-
 
         //전투 시작화면
         public void DisplayBattleScreen(bool showMonsterNumbers, bool isSkillPase = false)
@@ -151,6 +141,7 @@ namespace TextRPG_Team
                 Console.WriteLine("0. 나가기");
                 Console.WriteLine("1. 공격");
                 Console.WriteLine("2. 스킬");
+                Console.WriteLine("3. 회복 아이템");
                 Console.WriteLine("원하시는 행동을 입력해주세요.");
                 Console.Write(">> ");
             }
@@ -341,7 +332,7 @@ namespace TextRPG_Team
             Console.WriteLine(resultHeader);
             Console.WriteLine();
 
-            Console.WriteLine($"스테이지{currentStage}에서 몬스터 {killedMonster.Count}마리를 잡았습니다.");
+            Console.WriteLine($"던전에서 몬스터 {killedMonster.Count}마리를 잡았습니다.");
             Console.WriteLine();
 
             string[] prefix = new string[3];
@@ -391,44 +382,6 @@ namespace TextRPG_Team
             Console.WriteLine("아무 키를 눌러 계속");
             Console.Write(">> ");
             Console.ReadLine();
-
-            if (player.CurrentHp <= 0)
-            {
-                Console.WriteLine();
-                Console.WriteLine("1. 메인 화면으로 돌아가기");
-                Console.WriteLine();
-                Console.WriteLine("원하시는 행동을 입력하세요");
-                Console.Write(">> ");
-
-                int input = Program.CheckValidInput(1, 1);
-
-                if (input == 1)
-                {
-                    Program.DisplayGameIntro();
-                }
-            }
-            else
-            {
-                Console.WriteLine();
-                Console.WriteLine("1. 다음 스테이지로 이동");
-                Console.WriteLine("2. 메인 화면으로 돌아가기");
-                Console.WriteLine();
-                Console.WriteLine("원하시는 행동을 입력하세요");
-                Console.Write(">> ");
-
-                int input = Program.CheckValidInput(1, 2);
-
-                if (input == 1)
-                {
-                    currentStage++;
-                    killedMonster.Clear(); // 이전 스테이지에서 잡은 몬스터 초기화
-                    ShuffleMonsters();
-                }
-                else
-                {
-                    Program.DisplayGameIntro();
-                }
-            }
         }
 
         //텍스트 색상 지정
