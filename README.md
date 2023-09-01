@@ -1,28 +1,28 @@
 # TextRPG_Team
-## ÆÀ ³ë¼Ç
+## íŒ€ ë…¸ì…˜
 https://www.notion.so/05-B05-53b435b6a2bb4701bb2d6a123cf94242
 
-<<<<<<< HEAD
-## ±â´É - ÁÖÂù
-### ½ºÅ³ ±â´É
-CharacterSkills¿¡¼­ ´ÜÀÏ Å¸°Ù ½ºÅ³°ú ´ÙÁß Å¸°Ù ½ºÅ³À» ±¸ÇöÇÏ¿´½À´Ï´Ù.
-https://github.com/JeongJuChan/TextRPG_Team/blob/main/TextRPG_Team/CharacterSkills.cs
-SkillÀÌ¶ó´Â Å¬·¡½º¸¦ ¸¸µé¾î Å¸ÀÔ º° ½ºÅ³À» µî·ÏÇÒ ¼ö ÀÖ°Ô ±¸ÇöÇÏ¿´½À´Ï´Ù.
-https://github.com/JeongJuChan/TextRPG_Team/blob/main/TextRPG_Team/Skill.cs
-¹èÆ² ·ÎÁ÷°ú ÇÕÃÄ ½ºÅ³À» Àû¿ëÇÏ¿´½À´Ï´Ù.
-https://github.com/JeongJuChan/TextRPG_Team/blob/a2abf73d0b1bc653b756e6e9447485bf2ad1f130/TextRPG_Team/BattleManager.cs#L152C9-L152C42
-### Ä¡¸íÅ¸ ±â´É
-ÀüÅõ Áß ÀÏÁ¤ È®·ü·Î Ä¡¸íÅ¸°¡ Àû¿ë µÇ°Ô ±¸ÇöÇÏ¿´½À´Ï´Ù.
-https://github.com/JeongJuChan/TextRPG_Team/blob/a2abf73d0b1bc653b756e6e9447485bf2ad1f130/TextRPG_Team/BattleManager.cs#L398C9-L414C10
-### È¸ÇÇ ±â´É
-ÀüÅõ Áß ÀÏÁ¤ È®·ü·Î È¸ÇÇ°¡ Àû¿ë µÇ°Ô ±¸ÇöÇÏ¿´½À´Ï´Ù.
-https://github.com/JeongJuChan/TextRPG_Team/blob/a2abf73d0b1bc653b756e6e9447485bf2ad1f130/TextRPG_Team/BattleManager.cs#L416C1-L427C10
-### ¾ÆÀÌÅÛ ±¸Çö
-¾ÆÀÌÅÛÀ» Equipment Å¸ÀÔ°ú Consumable Å¸ÀÔÀ¸·Î ±¸ºÐÇØ °ªÀ» ÀúÀåÇÒ ¼ö ÀÖµµ·Ï ±¸ÇöÇÏ¿´½À´Ï´Ù.
-https://github.com/JeongJuChan/TextRPG_Team/blob/main/TextRPG_Team/Item.cs
-### µ¥ÀÌÅÍ ÀúÀå
-JsonÀ¸·Î µ¥ÀÌÅÍ¸¦ ÀúÀåÇÏ°í ºÒ·¯¿Ã ¼ö ÀÖ°Ô²û ÇÏ¿´½À´Ï´Ù.
-https://github.com/JeongJuChan/TextRPG_Team/blob/main/TextRPG_Team/JsonUtility.cs
-À¯Àú µ¥ÀÌÅÍ¸¦ ÀúÀå, ·ÎµåÇÏ´Â ºÎºÐÀÔ´Ï´Ù.
-https://github.com/JeongJuChan/TextRPG_Team/blob/a2abf73d0b1bc653b756e6e9447485bf2ad1f130/TextRPG_Team/Program.cs#L224
-### ÀÎº¥Åä¸® Á¤·Ä, È®Àå
+## ê¸°ëŠ¥ - ì£¼ì°¬
+### ìŠ¤í‚¬ ê¸°ëŠ¥
+CharacterSkillsì—ì„œ ë‹¨ì¼ íƒ€ê²Ÿ ìŠ¤í‚¬ê³¼ ë‹¤ì¤‘ íƒ€ê²Ÿ ìŠ¤í‚¬ì„ êµ¬í˜„í•˜ì˜€ìŠµë‹ˆë‹¤.
+https://github.com/JeongJuChan/TextRPG_Team/blob/14ac4f0c9784ba9bdbc5d8e73d39341bd23702c6/TextRPG_Team/CharacterSkills.cs#L3
+Skillì´ë¼ëŠ” í´ëž˜ìŠ¤ë¥¼ ë§Œë“¤ì–´ íƒ€ìž… ë³„ ìŠ¤í‚¬ì„ ë“±ë¡í•  ìˆ˜ ìžˆê²Œ êµ¬í˜„í•˜ì˜€ìŠµë‹ˆë‹¤.
+https://github.com/JeongJuChan/TextRPG_Team/blob/14ac4f0c9784ba9bdbc5d8e73d39341bd23702c6/TextRPG_Team/Skill.cs#L3
+ë°°í‹€ ë¡œì§ê³¼ í•©ì³ ìŠ¤í‚¬ì„ ì ìš©í•˜ì˜€ìŠµë‹ˆë‹¤.
+https://github.com/JeongJuChan/TextRPG_Team/blob/14ac4f0c9784ba9bdbc5d8e73d39341bd23702c6/TextRPG_Team/BattleManager.cs#L152
+### ì¹˜ëª…íƒ€ ê¸°ëŠ¥
+ì „íˆ¬ ì¤‘ ì¼ì • í™•ë¥ ë¡œ ì¹˜ëª…íƒ€ê°€ ì ìš© ë˜ê²Œ êµ¬í˜„í•˜ì˜€ìŠµë‹ˆë‹¤.
+https://github.com/JeongJuChan/TextRPG_Team/blob/14ac4f0c9784ba9bdbc5d8e73d39341bd23702c6/TextRPG_Team/BattleManager.cs#L398
+### íšŒí”¼ ê¸°ëŠ¥
+ì „íˆ¬ ì¤‘ ì¼ì • í™•ë¥ ë¡œ íšŒí”¼ê°€ ì ìš© ë˜ê²Œ êµ¬í˜„í•˜ì˜€ìŠµë‹ˆë‹¤.
+https://github.com/JeongJuChan/TextRPG_Team/blob/14ac4f0c9784ba9bdbc5d8e73d39341bd23702c6/TextRPG_Team/BattleManager.cs#L416
+### ì•„ì´í…œ êµ¬í˜„
+ì•„ì´í…œì„ Equipment íƒ€ìž…ê³¼ Consumable íƒ€ìž…ìœ¼ë¡œ êµ¬ë¶„í•´ ê°’ì„ ì €ìž¥í•  ìˆ˜ ìžˆë„ë¡ êµ¬í˜„í•˜ì˜€ìŠµë‹ˆë‹¤.
+https://github.com/JeongJuChan/TextRPG_Team/blob/14ac4f0c9784ba9bdbc5d8e73d39341bd23702c6/TextRPG_Team/Item.cs#L3
+### ë°ì´í„° ì €ìž¥
+Jsonìœ¼ë¡œ ë°ì´í„°ë¥¼ ì €ìž¥í•˜ê³  ë¶ˆëŸ¬ì˜¬ ìˆ˜ ìžˆê²Œë” í•˜ì˜€ìŠµë‹ˆë‹¤.
+https://github.com/JeongJuChan/TextRPG_Team/blob/14ac4f0c9784ba9bdbc5d8e73d39341bd23702c6/TextRPG_Team/JsonUtility.cs#L6
+ìœ ì € ë°ì´í„°ë¥¼ ì €ìž¥, ë¡œë“œí•˜ëŠ” ë¶€ë¶„ìž…ë‹ˆë‹¤.
+https://github.com/JeongJuChan/TextRPG_Team/blob/14ac4f0c9784ba9bdbc5d8e73d39341bd23702c6/TextRPG_Team/Program.cs#L277
+### ì¸ë²¤í† ë¦¬ ì •ë ¬, í™•ìž¥
+https://github.com/JeongJuChan/TextRPG_Team/blob/14ac4f0c9784ba9bdbc5d8e73d39341bd23702c6/TextRPG_Team/Program.cs#L211
