@@ -58,13 +58,13 @@ https://github.com/JeongJuChan/TextRPG_Team/blob/ed9422af751cf961fb95e95dce5d14d
 ## 기능 - 고영현
 ### 캐릭터 직업 선택
 CharacterCustom에서 직업을 선택할 수 있게 했습니다.
-https://github.com/JeongJuChan/TextRPG_Team/blob/14ac4f0c9784ba9bdbc5d8e73d39341bd23702c6/TextRPG_Team/BattleManager.cs#L398
+https://github.com/JeongJuChan/TextRPG_Team/blob/14ac4f0c9784ba9bdbc5d8e73d39341bd23702c6/TextRPG_Team/BattleManager.cs#L19
 ### 직업별 아이템 설정
 UserDataSetting에서 직업별 아이템을 추가했습니다.
-https://github.com/JeongJuChan/TextRPG_Team/blob/14ac4f0c9784ba9bdbc5d8e73d39341bd23702c6/TextRPG_Team/BattleManager.cs#L398
+https://github.com/JeongJuChan/TextRPG_Team/blob/14ac4f0c9784ba9bdbc5d8e73d39341bd23702c6/TextRPG_Team/BattleManager.cs#L19
 ### 상점 추가
 DisplayStore함수를 만들어 아이템 판매, 구매 할 수 있는 상점을 만들었습니다.
-https://github.com/JeongJuChan/TextRPG_Team/blob/14ac4f0c9784ba9bdbc5d8e73d39341bd23702c6/TextRPG_Team/BattleManager.cs#L398
+https://github.com/JeongJuChan/TextRPG_Team/blob/14ac4f0c9784ba9bdbc5d8e73d39341bd23702c6/TextRPG_Team/BattleManager.cs#L473
 
 ---
 
