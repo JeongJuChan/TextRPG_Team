@@ -56,12 +56,10 @@ https://github.com/JeongJuChan/TextRPG_Team/blob/ed9422af751cf961fb95e95dce5d14d
 
 ---
 ## 게임 화면
-| 메인 화면  |  전투 화면   |
-| :-------------------------------------------: | :------------: |
-|  1 |  2 |  
-|  상점 화면 |  -- 화면 |  
-| 5   |  6 |
+ ![image](https://github.com/JeongJuChan/TextRPG_Team/assets/111439484/fac6cf32-f7b6-47b8-a466-bca6a69820fd)
 
+
+ ![image](https://github.com/JeongJuChan/TextRPG_Team/assets/111439484/551ff808-1263-49c1-b252-f2aba1b40726)
 ---
 
 ### Environment
